@@ -22,6 +22,8 @@ i2c.c
 
 main.c
 
+MicroMenu.c
+
 mpu6050.c
 
 PWM.c

@@ -41,62 +41,69 @@ int main(void)
 	//i2c_scanner(scanned_addr);
     while (1) 
     {
-		pwm1A_start(pwm_value);
-		pwm_value>100?pwm_value=100:0;
-		draw_string(0,00,"backlight",0,BACKGROUND_COLOR,RED,TinyFont);
-		draw_number(100,00,pwm_value,0,BACKGROUND_COLOR,WHITE,TinyFont);
+			switch(readButtonState()){
+				case ENC_LEFT:
+				pwm_value--;
+				enc--;
+				resetButton();
+				break ;
+				
+				case ENC_RIGHT:
+				pwm_value++;
+				enc++;
+				resetButton();
+				break ;
+				
+				case BUTTON_UP:
+				resetButton();
+				break ;
+				
+				case BUTTON_DOWN:
+				resetButton();
+				break ;
+				
+				case BUTTON_SELECT:
+				resetButton();
+				break ;
+				
+				default:
+				pwm1A_start(pwm_value);
+				pwm_value>100?pwm_value=100:0;
+				draw_string(0,00,"backlight",0,BACKGROUND_COLOR,RED,TinyFont);
+				draw_number(100,00,pwm_value,0,BACKGROUND_COLOR,WHITE,TinyFont);
 
-	if(adc_conv_flag){
-		ema_filter_array(ADC_data,255,ALFHA);
-		uint16_t dt=ADC_average(ADC_data);
-		float voltage=(dt*4.51)/1024;
-		draw_string(0,10,"voltage",0,BACKGROUND_COLOR,RED,TinyFont);
-		draw_float_number(100,10,voltage,"%0.1f",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
-		draw_string(132,10,"v",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
-		print_string("ADC_value ");
-		print_number(dt);
-		print_string("\r\n");
-		mpu6050_ready_data(&mpu6050_dt);
-		print_mpu6050_data();
-		adc_conv_flag=0;
-	}
-    update_bme280();
-	draw_string(0,30,"mpu_temp",0,BACKGROUND_COLOR,RED,TinyFont);
-	draw_float_number(100,30,mpu6050_temp(),"%.1f",0,BACKGROUND_COLOR,WHITE,TinyFont);
-	
-	if(enc-prev_enc>0){
-		print_string("clockwise ");
-		print_number(enc);
-		print_string("\r\n");
-	} else if(enc-prev_enc<0){
-			print_string("counterclockwise ");
-			print_number(enc);
-			print_string("\r\n");
-		}
-	prev_enc=enc;
-	
-	if(shortpress_but){
-		shortpress_but=0;
-	}
-		
-	if(shortpress_enc_but){
-		pwm1A_stop();
-		shortpress_enc_but=0;
-	}
-		
-	if(upState>=2){
-		pwm_value++;
-		enc++;
-		upState=0;
-		downState=0;
-	}
-		
-	if(downState>=2){
-		pwm_value--;
-		enc--;
-		downState=0;
-		upState=0;
-	}	
+				if(adc_conv_flag){
+					ema_filter_array(ADC_data,255,ALFHA);
+					uint16_t dt=ADC_average(ADC_data);
+					float voltage=(dt*4.51)/1024;
+					draw_string(0,10,"voltage",0,BACKGROUND_COLOR,RED,TinyFont);
+					draw_float_number(100,10,voltage,"%0.1f",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
+					draw_string(132,10,"v",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
+					print_string("ADC_value ");
+					print_number(dt);
+					print_string("\r\n");
+					mpu6050_ready_data(&mpu6050_dt);
+					print_mpu6050_data();
+					adc_conv_flag=0;
+				}
+				update_bme280();
+				draw_string(0,30,"mpu_temp",0,BACKGROUND_COLOR,RED,TinyFont);
+				draw_float_number(100,30,mpu6050_temp(),"%.1f",0,BACKGROUND_COLOR,WHITE,TinyFont);
+				
+				if(enc-prev_enc>0){
+					print_string("clockwise ");
+					print_number(enc);
+					print_string("\r\n");
+					} else if(enc-prev_enc<0){
+					print_string("counterclockwise ");
+					print_number(enc);
+					print_string("\r\n");
+				}
+				prev_enc=enc;	
+				
+				break ;
+			}
+			
   }
 }
 

@@ -71,7 +71,6 @@ volatile uint8_t	update_bme280_flag=0;                                          
 			 
 		 }
 		 oldState=newState;
-
 	 }
 	//обработка кнопки энкодера
 	 if(!READ_BIT(ENCODER_PIN,(1<<ENC_BUTTON))){										
@@ -116,3 +115,51 @@ volatile uint8_t	update_bme280_flag=0;                                          
 	adc_conv==125?update_bme280_flag=1:update_bme280_flag;
  }
  
+ uint8_t readButtonState(void){
+	 if(shortpress_enc_but){
+		 return BUTTON_SELECT;
+	 }else
+	 if(shortpress_but){
+		 return BUTTON_UP;
+	 }else
+	 if(longpress_but){
+		 return BUTTON_DOWN;
+	 }else
+	 if(downState>=2){
+		 return ENC_LEFT;
+	 }
+	 else
+	 if(upState>=2){
+		 return ENC_RIGHT;
+	 }else
+	 if(longpress_enc_but){
+		 return BUTTON_MENUITEMBACK;
+	 }
+	 return BUTTON_NOTHING;
+ }
+
+ void resetButton(void){
+	 
+	 switch(readButtonState()){
+		 case BUTTON_SELECT:
+		 shortpress_enc_but=0;
+		 break;
+		 case BUTTON_UP :
+		 shortpress_but=0;
+		 break;
+		 case BUTTON_DOWN:
+		 longpress_but=0;
+		 break;
+		 case ENC_LEFT :
+		 downState=0;
+		 upState=0;
+		 break;
+		 case ENC_RIGHT :
+		 upState=0;
+		 downState=0;
+		 break;
+		 case BUTTON_MENUITEMBACK:
+		 longpress_enc_but=0;
+		 break;
+	 }
+ }

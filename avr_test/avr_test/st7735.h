@@ -102,9 +102,7 @@
 #ifdef BIGFONT
 #define SYSTEM_FONT       BigFont
 #define SYSTEMFONT_SPACE BIGFONT_SPACE
-#endif
-
-#ifdef TINYFONT
+#else
 #define SYSTEM_FONT       TinyFont
 #define SYSTEMFONT_SPACE TINYFONT_SPACE
 #endif

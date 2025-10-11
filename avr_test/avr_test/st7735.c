@@ -70,9 +70,9 @@ void st7735_init(void){
 	send_command(ST7735_GMCTRN1);
 	st7735_multiply_send(gmctrn1_data, sizeof(gmctrn1_data));
 	send_command(ST7735_NORON);
-	_delay_ms(10);
+	_delay_ms(ST7735_SPI_TIMEOUT);
 	send_command(ST7735_DISPON);
-	_delay_ms(100);
+	_delay_ms(ST7735_SPI_TIMEOUT);
 	STOP_Tx;
 }
 

@@ -42,6 +42,20 @@
 
 #define LONG_TIMEOUT       150
 
+#define PRESSED 		   1
+#define UNPRESSED		   0
+
+typedef  enum
+{
+	ENC_LEFT    		=  0 ,
+	BUTTON_UP    		=  1 ,
+	BUTTON_DOWN			=  2 ,
+	ENC_RIGHT			=  3 ,
+	BUTTON_SELECT		=  4 ,
+	BUTTON_MENUITEMBACK =  5 ,
+	BUTTON_NOTHING		=  255
+} Button_TypeDef;
+
 extern volatile uint8_t shortpress_enc_but,
 						shortpress_but,
 						longpress_enc_but,
@@ -62,6 +76,7 @@ extern volatile uint8_t update_bme280_flag;
 
 void enc_ports_init(void);
 void timer0_init();
-
+uint8_t readButtonState(void);
+void resetButton(void);
 
 #endif /* ENCODER_H_ */

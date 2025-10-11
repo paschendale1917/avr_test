@@ -168,6 +168,15 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MenuConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MicroMenu.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MicroMenu.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="mpu6050.c">
       <SubType>compile</SubType>
     </Compile>
