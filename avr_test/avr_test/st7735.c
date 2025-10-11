@@ -1,6 +1,19 @@
 #define F_CPU 16000000UL
 #include "st7735.h"
 
+const uint8_t frame_ctrl_data[] = {0x01, 0x2C, 0x2D};
+const uint8_t pwctr1_data[] = {0xA2, 0x02, 0x84};
+const uint8_t gmctrp1_data[] = {
+	0x02, 0x1c, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2d,
+	0x29, 0x25, 0x2B, 0x39, 0x00, 0x01, 0x03, 0x10
+};
+
+const uint8_t gmctrn1_data[] = {
+	0x03, 0x1d, 0x07, 0x06, 0x2E, 0x2C, 0x29, 0x2D,
+	0x2E, 0x2E, 0x37, 0x3F, 0x00, 0x00, 0x02, 0x10
+};
+
+	
 void st7735_ports_init(void){
 SET_BIT(SPI_DDR,(1<<BKL));   // подсветка
 SET_BIT(SPI_DDR,(1<<DC));    // данные/команда
@@ -18,7 +31,7 @@ void send_data(uint8_t byte){
 	spi_sendbyte(byte);
 }
 
-void st7735_multiply_send(uint8_t *data, uint32_t num){
+void st7735_multiply_send(const uint8_t *data, uint32_t num){
 	ST7735_DATA;
 	for (uint32_t i = 0; i < num; i++)
 	{
@@ -40,37 +53,11 @@ void st7735_init(void){
 	send_command(ST7735_SLPOUT);
 	_delay_ms(500);
 	send_command(ST7735_FRMCTR1);
-	send_data(0x01);
-	send_data(0x2C);
-	send_data(0x2D);
-	send_command(ST7735_FRMCTR2);
-	send_data(0x01);
-	send_data(0x2C);
-	send_data(0x2D);
-	send_command(ST7735_FRMCTR3);
-	send_data(0x01);
-	send_data(0x2C);
-	send_data(0x2D);
-	send_data(0x01);
-	send_data(0x2C);
-	send_data(0x2D);
+	st7735_multiply_send(frame_ctrl_data, sizeof(frame_ctrl_data));
 	send_command(ST7735_INVCTR);
 	send_data(0x07);
 	send_command(ST7735_PWCTR1);
-	send_data(0xA2);
-	send_data(0x02);
-	send_data(0x84);
-	send_command(ST7735_PWCTR2);
-	send_data(0xC5);
-	send_command(ST7735_PWCTR3);
-	send_data(0x0A);
-	send_data(0x00);
-	send_command(ST7735_PWCTR4);
-	send_data(0x8A);
-	send_data(0x2A);
-	send_command(ST7735_PWCTR5);
-	send_data(0x8A);
-	send_data(0xEE);
+	st7735_multiply_send(pwctr1_data, sizeof(pwctr1_data));
 	send_command(ST7735_VMCTR1);
 	send_data(0x0E);
 	send_command(ST7735_INVON);
@@ -79,39 +66,9 @@ void st7735_init(void){
 	send_command(ST7735_COLMOD);
 	send_data(0x05);
 	send_command(ST7735_GMCTRP1);
-	send_data(0x02);
-	send_data(0x1c);
-	send_data(0x07);
-	send_data(0x12);
-	send_data(0x37);
-	send_data(0x32);
-	send_data(0x29);
-	send_data(0x2d);
-	send_data(0x29);
-	send_data(0x25);
-	send_data(0x2B);
-	send_data(0x39);
-	send_data(0x00);
-	send_data(0x01);
-	send_data(0x03);
-	send_data(0x10);
+	st7735_multiply_send(gmctrp1_data, sizeof(gmctrp1_data));
 	send_command(ST7735_GMCTRN1);
-	send_data(0x03);
-	send_data(0x1d);
-	send_data(0x07);
-	send_data(0x06);
-	send_data(0x2E);
-	send_data(0x2C);
-	send_data(0x29);
-	send_data(0x2D);
-	send_data(0x2E);
-	send_data(0x2E);
-	send_data(0x37);
-	send_data(0x3F);
-	send_data(0x00);
-	send_data(0x00);
-	send_data(0x02);
-	send_data(0x10);
+	st7735_multiply_send(gmctrn1_data, sizeof(gmctrn1_data));
 	send_command(ST7735_NORON);
 	_delay_ms(10);
 	send_command(ST7735_DISPON);
