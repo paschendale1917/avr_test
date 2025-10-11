@@ -96,9 +96,7 @@ int main(void)
 		enc--;
 		downState=0;
 		upState=0;
-	}
-
-		
-    }
+	}	
+  }
 }
 
