@@ -17,7 +17,7 @@ extern uint8_t DotMatrix_XL_Num[2004];
 //extern uint8_t Various_Symbols_16x32[6084];
 //extern uint8_t various_symbols[3044];
 //extern uint8_t SevenSegNumFontPlus[2204];
-//extern uint8_t ArialNumFontPlus[2204];
+extern uint8_t ArialNumFontPlus[2204];
 //extern uint8_t Grotesk16x32[6084];
 //extern uint8_t GroteskBold16x32_DK_NO[6084];
 //extern uint8_t Grotesk24x48[13684];

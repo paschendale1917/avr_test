@@ -10,9 +10,9 @@
 #include "macros.h"
 
 
-#define ENCODER_DDR        DDRD
-#define ENCODER_PORT       PORTD
-#define ENCODER_PIN        PIND
+#define ENCODER_DDR         DDRD
+#define ENCODER_PORT        PORTD
+#define ENCODER_PIN         PIND
 
 #define LED1_DDR            DDRD
 #define LED1_PORT           PORTD
@@ -28,19 +28,16 @@
 #define LED0_OFF            LED0_PORT&=~(1<<LED0)
 #define LED0_TOGGLE         LED0_PORT^=(1<<LED0)
 
-#define BUTTON_DDR         DDRD
-#define BUTTON_PORT        PORTD
-#define BUTTON_PIN		   PIND
+#define BUTTON_DDR          DDRD
+#define BUTTON_PORT         PORTD
+#define BUTTON_PIN		    PIND
 
- 
-#define LED1			   PD1
-#define LED0			   PD0
 #define BUTTON             PD7
 #define ENC_DT             PD2
 #define ENC_CLK            PD3
 #define ENC_BUTTON         PD4
 
-#define LONG_TIMEOUT       150
+#define LONG_TIMEOUT       100
 
 #define PRESSED 		   1
 #define UNPRESSED		   0

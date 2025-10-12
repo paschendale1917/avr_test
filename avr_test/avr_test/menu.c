@@ -1,0 +1,123 @@
+#include "menu.h"
+
+
+volatile char string[100];
+uint8_t pwm_value=50;
+uint8_t enc=0,prev_enc=0;
+
+uint8_t pointer_clear_flag=0;
+
+const char *main_menu[]={"MENU_ITEM_1","MENU_ITEM_2","MENU_ITEM_3","MENU_ITEM_4"};
+const char *item_1_menu[]={"MENU_ITEM_1.1","MENU_ITEM_1.2","MENU_ITEM_1.3"};
+const char *item_2_menu[]={"MENU_ITEM_2.1","MENU_ITEM_2.2"};
+const char *item_3_menu[]={"MENU_ITEM_3.1","MENU_ITEM_3.2","MENU_ITEM_3.3","MENU_ITEM_3.4","MENU_ITEM_3.5"};
+const char *pointer=">";
+
+//указатель на текущий пункт меню
+MenuItem *current_menu = NULL;
+
+//создаем пункты меню
+MenuItem main_menu_item_1,main_menu_item_2,main_menu_item_3,main_menu_item_4;
+MenuItem menu_item_1_1,menu_item_1_2,menu_item_1_3;
+MenuItem menu_item_2_1,menu_item_2_2;
+MenuItem menu_item_3_1,menu_item_3_2,menu_item_3_3,menu_item_3_4,menu_item_3_5;
+
+
+void menu_init(MenuItem* start_menu) {
+	const uint8_t line_height = pgm_read_byte(MENU_FONT + 1) + 2;
+	//главное меню
+	main_menu_item_1 = (MenuItem){main_menu, 4, NULL, &main_menu_item_4, &main_menu_item_2, NULL, &menu_item_1_1, X_POINTER_OFFSET, Y_POINTER_OFFSET};
+	main_menu_item_2 = (MenuItem){main_menu, 4, NULL, &main_menu_item_1, &main_menu_item_3, NULL, &menu_item_2_1, X_POINTER_OFFSET, Y_POINTER_OFFSET + 1 * line_height};
+	main_menu_item_3 = (MenuItem){main_menu, 4, NULL, &main_menu_item_2, &main_menu_item_4, NULL, &menu_item_3_1, X_POINTER_OFFSET, Y_POINTER_OFFSET + 2 * line_height};
+	main_menu_item_4 = (MenuItem){main_menu, 4, NULL, &main_menu_item_3, &main_menu_item_1, NULL, NULL,			  X_POINTER_OFFSET, Y_POINTER_OFFSET + 3 * line_height};
+	
+	//меню второго уровня вложенности пункта 1 главного меню
+	menu_item_1_1 = (MenuItem){item_1_menu, 3, NULL, &menu_item_1_3, &menu_item_1_2, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET};
+	menu_item_1_2 = (MenuItem){item_1_menu, 3, NULL, &menu_item_1_1, &menu_item_1_3, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET + 1 * line_height};
+	menu_item_1_3 = (MenuItem){item_1_menu, 3, NULL, &menu_item_1_2, &menu_item_1_1, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET + 2 * line_height};
+	
+	//меню второго уровня вложенности пункта 2 главного меню
+	menu_item_2_1 = (MenuItem){item_2_menu, 2, NULL, &menu_item_2_2, &menu_item_2_2, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET};
+	menu_item_2_2 = (MenuItem){item_2_menu, 2, NULL, &menu_item_2_1, &menu_item_2_1, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET + 1 * line_height};
+
+	//меню второго уровня вложенности пункта 3 главного меню
+	menu_item_3_1 = (MenuItem){item_3_menu, 5, NULL, &menu_item_3_5, &menu_item_3_2, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET};
+	menu_item_3_2 = (MenuItem){item_3_menu, 5, NULL, &menu_item_3_1, &menu_item_3_3, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET + 1 * line_height};
+	menu_item_3_3 = (MenuItem){item_3_menu, 5, NULL, &menu_item_3_2, &menu_item_3_4, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET + 2 * line_height};
+	menu_item_3_4 = (MenuItem){item_3_menu, 5, NULL, &menu_item_3_3, &menu_item_3_5, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET + 3 * line_height};
+	menu_item_3_5 = (MenuItem){item_3_menu, 5, NULL, &menu_item_3_4, &menu_item_3_1, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET + 4 * line_height};
+		
+	current_menu = start_menu;
+	pointer_clear_flag=1;
+}
+
+void draw_pointer(MenuItem *ptr){
+	draw_string(ptr->pointer_pos_x, ptr->pointer_pos_y, pointer,MENUFONT_SPACE, BACKGROUND_COLOR, POINTER_COLOR, MENU_FONT);
+}
+
+void clear_pointer(MenuItem *ptr){
+	draw_string(ptr->pointer_pos_x, ptr->pointer_pos_y, pointer,MENUFONT_SPACE, BACKGROUND_COLOR, BACKGROUND_COLOR, MENU_FONT);
+}
+
+void clear_pointer_coord(MenuItem *ptr){
+	ptr->pointer_pos_x=X_POINTER_OFFSET;
+	ptr->pointer_pos_y=Y_POINTER_OFFSET;
+}
+
+void display_pointer(const char *pointer) {
+	static MenuItem *prev_menu = NULL;
+	if(pointer_clear_flag) {
+		if(prev_menu != NULL && prev_menu != current_menu) {  // очищаем старый указатель если меню изменилось
+			clear_pointer(prev_menu);
+		}
+		draw_pointer(current_menu);
+		prev_menu = current_menu;
+		pointer_clear_flag = 0;
+	}
+}
+
+//функция отображения всех пунктов текущего меню
+void display_current_menu(uint8_t xstart, uint8_t ystart) {
+	uint8_t space=pgm_read_byte(MENU_FONT+1)+2;
+	clear_pointer(current_menu);
+	for(uint8_t i=0;i<current_menu->num_menu_items;i++){
+		draw_string(xstart,ystart+space*i,*(current_menu->menu_name+i), MENUFONT_SPACE, BACKGROUND_COLOR, MENU_COLOR,MENU_FONT);
+	}
+}
+
+void clear_current_menu(uint8_t xstart, uint8_t ystart) {
+	uint8_t space=pgm_read_byte(MENU_FONT+1)+2;
+	for(uint8_t i=0;i<current_menu->num_menu_items;i++){
+		draw_string(xstart,ystart+space*i,*(current_menu->menu_name+i), MENUFONT_SPACE, BACKGROUND_COLOR, BACKGROUND_COLOR,MENU_FONT);
+	}
+	clear_pointer(current_menu);
+	
+}
+
+void enter_upmenu(void) {
+	clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
+	if(current_menu->parent != NULL||current_menu->action!=NULL) {
+		current_menu = current_menu->parent;
+		pointer_clear_flag = 1;
+		display_current_menu(X_MENU_OFFSET, Y_MENU_OFFSET);
+	}
+}
+
+void enter_submenu(void) {
+	clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
+	if(current_menu->child != NULL) {
+		current_menu = current_menu->child;
+		pointer_clear_flag = 1;
+		display_current_menu(X_MENU_OFFSET, Y_MENU_OFFSET);
+	}
+}
+
+void execute_menu_action(void) {                               // функция запуска обработчика пункта меню, если он есть для данного пункта меню
+	if (current_menu->action)current_menu->action();
+}
+
+void main_menu_it4_handler(void) {
+	clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
+	update_bme280();
+}
+

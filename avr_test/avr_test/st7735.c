@@ -110,6 +110,10 @@ void background(uint16_t color){
 	draw_rect(0,0,LCD_WIDTH_SIZE ,LCD_HEIGHT_SIZE,color);
 }
 
+void clear_display(void){
+	background(BACKGROUND_COLOR);
+}
+
 void draw_image(uint16_t x_start, uint16_t x_stop, uint16_t y_start, uint16_t y_stop, const uint16_t *image){
 	uint16_t s=0;
 	START_Tx;
@@ -124,34 +128,44 @@ void draw_image(uint16_t x_start, uint16_t x_stop, uint16_t y_start, uint16_t y_
 }
 
 
-void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bcolor, uint16_t fcolor, uint8_t *font){
-	uint8_t data_w = pgm_read_byte(font)/8 ;                                     //ширина шрифта в байтах
-	volatile uint16_t offset = (letter - pgm_read_byte(font+2)) * pgm_read_byte(font+1) * data_w + 4;     //смещение начала искомого символа в массиве , описывающем символы//4-первые 4 байта с инфой о шрифте, letter-численное представление символа по таблице ascii, font[2]==32(0х20)-значение смещения символов в таблице ascii(в имеющемся шрифте нет первых 32 значков из таблицы),font[1]*data_w -вычисление, сколько байт нужно забрать(размер буквы в байтах)
-	uint8_t lettersize = pgm_read_byte(font+1) * data_w;
-	uint8_t letter_buf[400] = {0};                                  //размер массива обуславливается размером шрифтов, например, для шрифта 16*16=256 байт.Ставлю с запасом, так как шрифты есть бОльшего размера
-	uint8_t data = 0;
-    for(uint16_t i = 0; i < lettersize; i++) {                        //забираем байты буквы из массива, описывающего шрифт
-	    letter_buf[i] = pgm_read_byte(font+offset + i);
-    }
+void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bcolor,uint16_t fcolor,uint8_t *font) {
+	
+	// Получаем параметры шрифта
+	const uint8_t data_w = pgm_read_byte(font) / 8;     // ширина в байтах
+	const uint8_t letter_height = pgm_read_byte(font + 1);  // высота символа
+	const uint8_t letter_width = data_w * 8;            // ширина символа в пикселях
+	const uint8_t ascii_offset = pgm_read_byte(font + 2);  // смещение ASCII
+	
+	// Вычисляем смещение символа в массиве
+	const uint16_t offset = (letter - ascii_offset) * letter_height * data_w + 4;
+	const uint16_t lettersize = letter_height * data_w;
+	
+	// Буфер для хранения данных символа
+	uint8_t letter_buf[400] = {0};
+	
+	// Считываем данные символа из памяти
+	for(uint16_t i = 0; i < lettersize; i++) {
+		letter_buf[i] = pgm_read_byte(font + offset + i);
+	}
+	
+	// Устанавливаем позицию и режим записи
 	START_Tx;
-	setXY(xstart, pgm_read_byte(font+1), ystart, pgm_read_byte(font+1));                          //по х ширина символа, по у высота символа
-	send_command(ST7735_RAMWR);                                       //команда записи в память дисплея
+	setXY(xstart, letter_width, ystart, letter_height);  // Указываем реальные размеры символа
+	send_command(ST7735_RAMWR);
 	ST7735_DATA;
-	for(uint16_t  u = 0; u < lettersize; u += data_w) {
-		for(uint8_t w = 0; w < data_w; w++) {
-			data = letter_buf[u + w];
-			for(uint8_t j = 0; j < 8; j++) {                              //отправка побитово в дисплей
-				if(data & 0x80) {
-					spi_sendbyte((uint8_t)(fcolor>>8));
-					spi_sendbyte((uint8_t)fcolor);
-					} else {
-					spi_sendbyte((uint8_t)(bcolor>>8));
-					spi_sendbyte((uint8_t)bcolor);
-				}
+	
+	for(uint16_t y = 0; y < letter_height; y++) {
+		for(uint16_t x = 0; x < letter_width; x += 8) {
+			uint8_t data = letter_buf[y * data_w + x / 8];
+			for(uint8_t bit = 0; bit < 8; bit++) {
+				if (x + bit >= letter_width) break;			// Защита от выхода за границы
+				spi_sendbyte((data & 0x80) ? (fcolor >> 8) : (bcolor >> 8));
+				spi_sendbyte((data & 0x80) ? fcolor : bcolor);
 				data <<= 1;
 			}
 		}
 	}
+	
 	STOP_Tx;
 }
 

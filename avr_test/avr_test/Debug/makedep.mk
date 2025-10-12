@@ -22,7 +22,7 @@ i2c.c
 
 main.c
 
-MicroMenu.c
+menu.c
 
 mpu6050.c
 

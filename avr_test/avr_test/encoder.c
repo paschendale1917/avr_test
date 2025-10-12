@@ -28,12 +28,6 @@ volatile uint8_t	update_bme280_flag=0;                                          
 	 
 	 CLEAR_BIT(BUTTON_DDR,(1<<BUTTON));
 	 SET_BIT(BUTTON_PORT,(1<<BUTTON));
-													
-	 SET_BIT(LED1_DDR,(1<<LED1));																	//ножка светодиода на выход 
-	 LED1_ON;																						//логический нуль на ножке светодиода
-	 
-	 SET_BIT(LED0_DDR,(1<<LED0));																	//ножка светодиода на выход
-	 LED0_ON;																						//логический нуль на ножке светодиода
 }
 
  /*инициализация канала А таймера 0*/
@@ -119,47 +113,46 @@ volatile uint8_t	update_bme280_flag=0;                                          
 	 if(shortpress_enc_but){
 		 return BUTTON_SELECT;
 	 }else
-	 if(shortpress_but){
-		 return BUTTON_UP;
+		if(shortpress_but){
+			return BUTTON_UP;
 	 }else
-	 if(longpress_but){
-		 return BUTTON_DOWN;
+		if(longpress_but){
+			return BUTTON_DOWN;
 	 }else
-	 if(downState>=2){
-		 return ENC_LEFT;
+		if(downState>=2){
+			return ENC_LEFT;
 	 }
 	 else
-	 if(upState>=2){
-		 return ENC_RIGHT;
+		if(upState>=2){
+			return ENC_RIGHT;
 	 }else
-	 if(longpress_enc_but){
-		 return BUTTON_MENUITEMBACK;
+		if(longpress_enc_but){
+			return BUTTON_MENUITEMBACK;
 	 }
 	 return BUTTON_NOTHING;
  }
 
  void resetButton(void){
-	 
 	 switch(readButtonState()){
 		 case BUTTON_SELECT:
-		 shortpress_enc_but=0;
-		 break;
+			shortpress_enc_but=0;
+			break;
 		 case BUTTON_UP :
-		 shortpress_but=0;
-		 break;
+			shortpress_but=0;
+			break;
 		 case BUTTON_DOWN:
-		 longpress_but=0;
-		 break;
+			longpress_but=0;
+			break;
 		 case ENC_LEFT :
-		 downState=0;
-		 upState=0;
-		 break;
+			downState=0;
+			upState=0;
+			 break;
 		 case ENC_RIGHT :
-		 upState=0;
-		 downState=0;
-		 break;
+			upState=0;
+			downState=0;
+			break;
 		 case BUTTON_MENUITEMBACK:
-		 longpress_enc_but=0;
-		 break;
+			longpress_enc_but=0;
+			break;
 	 }
  }

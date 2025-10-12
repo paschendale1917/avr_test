@@ -52,8 +52,6 @@
 #define ST7735_GMCTRN1                                                  0xE1
 #define ST7735_SPI_TIMEOUT                                              100
 
-
-
 #define ST7735_DATA                                                     SET_BIT(SPI_PORT,(1<<DC))
 #define ST7735_COMMAND                                                  CLEAR_BIT(SPI_PORT,(1<<DC))
 
@@ -85,27 +83,15 @@
 #define GRAYBLUE    													0X5458
 #define ORANGE                                             				0xFA20
 
-
 #define LCD_HEIGHT_SIZE                                                 80    //высота
 #define LCD_WIDTH_SIZE                                                  160   //ширина
 #define MADCTL															0b01101000
 
-
 #define LCD_WIDTH_OFFSET												26
 #define LCD_HEIGHT_OFFSET												1
 
+
 #define BACKGROUND_COLOR                                                BLACK
-
-
-#define TINYFONT
-
-#ifdef BIGFONT
-#define SYSTEM_FONT       BigFont
-#define SYSTEMFONT_SPACE BIGFONT_SPACE
-#else
-#define SYSTEM_FONT       TinyFont
-#define SYSTEMFONT_SPACE TINYFONT_SPACE
-#endif
 
 
 void st7735_ports_init(void);
@@ -120,4 +106,5 @@ void draw_image(uint16_t x_start, uint16_t x_stop, uint16_t y_start, uint16_t y_
 void draw_float_number(uint16_t xpos,  uint16_t ypos, float number,const char *dimens, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font);
 uint8_t draw_2num_zero(uint16_t xpos,  uint16_t ypos, uint8_t number, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font);
 void draw_hexnumber(uint16_t xpos,  uint16_t ypos, int32_t number, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font);
+void clear_display(void);
 #endif /* ST7735_H_ */
