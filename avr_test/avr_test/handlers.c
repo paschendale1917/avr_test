@@ -128,10 +128,11 @@ void return_from_handler(void){
 
 void about_handler(void){
 	menustate=3;
-	if(clear_display_flag){													//очистить нужно единожды, поэтому был введен флаг очистки дисплея                           
+	//resetButton();
+	/*if(clear_display_flag){													//очистить нужно единожды, поэтому был введен флаг очистки дисплея                           
 		clear_display();
 		clear_display_flag=0;
-	}
+	}*/
 	draw_string(0,0,"Bryansk 2025",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
 	if(readButtonState()==BUTTON_MENUITEMBACK){								//в обработчике ожидаем нжатие кнопки возврата, если оно происходит, то
 		return_from_handler();												//вызываем функцию возврата к меню
