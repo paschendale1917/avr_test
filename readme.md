@@ -8,7 +8,7 @@
 - **Управление:** Энкодер + кнопка
 - **AVR Programmer:** USBasp
 
-### Сборка проекта
+### Клонирование репозитория
 git clone https://github.com/paschendale1917/avr_test.git
 
 ### Сделано:
