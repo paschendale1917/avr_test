@@ -6,7 +6,7 @@
 - **Дисплей:** LCD ST7735 80*160
 - **Датчики:** BME280, MPU6050
 - **Управление:** Энкодер + кнопка
-- **AVR Programmer:** (USBasp, AVRISP mkII)
+- **AVR Programmer:** USBasp
 
 ### Сборка проекта
 git clone https://github.com/paschendale1917/avr_test.git
