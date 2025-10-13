@@ -1,11 +1,11 @@
-#ifndef MPU6050_H_
+п»ї#ifndef MPU6050_H_
 #define MPU6050_H_
 
 #include "i2c.h"
 
 #define MPU6050_ADDR					0xD0
 
-//Регистры 
+//вЂ“РµРіРёСЃС‚СЂС‹ 
 #define MPU_CONFIG						0x1A
 #define FILTER_0                        0x00
 #define FILTER_1                        0x01

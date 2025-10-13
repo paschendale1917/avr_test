@@ -1,4 +1,4 @@
-#include "handlers.h"
+﻿#include "handlers.h"
 
 void hardware_init(void){
 	enc_ports_init();

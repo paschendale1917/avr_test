@@ -1,4 +1,4 @@
-#define F_CPU 16000000UL
+﻿#define F_CPU 16000000UL
 #include "st7735.h"
 
 const uint8_t frame_ctrl_data[] = {0x01, 0x2C, 0x2D};

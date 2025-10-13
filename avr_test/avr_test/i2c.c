@@ -1,4 +1,4 @@
-#include "i2c.h"
+﻿#include "i2c.h"
 
 uint8_t scanned_addr[10]={0,};
 

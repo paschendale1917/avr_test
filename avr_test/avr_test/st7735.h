@@ -1,4 +1,4 @@
-#include <avr/io.h>
+п»ї#include <avr/io.h>
 #include <util/delay.h>
 #include "fonts.h"
 #include <avr/pgmspace.h>
@@ -83,8 +83,8 @@
 #define GRAYBLUE    													0X5458
 #define ORANGE                                             				0xFA20
 
-#define LCD_HEIGHT_SIZE                                                 80    //высота
-#define LCD_WIDTH_SIZE                                                  160   //ширина
+#define LCD_HEIGHT_SIZE                                                 80    //РІС‹СЃРѕС‚Р°
+#define LCD_WIDTH_SIZE                                                  160   //С€РёСЂРёРЅР°
 #define MADCTL															0b01101000
 
 #define LCD_WIDTH_OFFSET												26

@@ -1,4 +1,4 @@
-//Стащил из Keil
+﻿//Стащил из Keil
 #ifndef MACROS_H_
 #define MACROS_H_
 

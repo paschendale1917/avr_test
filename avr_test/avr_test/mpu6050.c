@@ -1,4 +1,4 @@
-#include "mpu6050.h"
+﻿#include "mpu6050.h"
 
 mpu6050_data mpu6050_dt;
 mpu6050_data mpu6050_ready_dt;

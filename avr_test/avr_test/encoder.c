@@ -1,4 +1,4 @@
-#include "encoder.h"
+﻿#include "encoder.h"
 
 volatile uint8_t flag = 0;
 volatile uint8_t	shortpress_enc_but=0,

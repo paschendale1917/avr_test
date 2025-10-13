@@ -1,4 +1,4 @@
-#include "ADC.h"
+п»ї#include "ADC.h"
 
 volatile uint16_t ADC_data[256]={0,};
 volatile uint16_t ADC_data_filtered[256]={0,};
@@ -8,7 +8,7 @@ void set_ADC_channel(uint8_t adc_ch){
 	switch(adc_ch){
 		case 0:
 			MODIFY_REG(ADMUX, RESET_MUX, ADC0);
-			MODIFY_REG(DIDR0, RESET_DIDR0, ADC0); //отключение цифрового входа
+			MODIFY_REG(DIDR0, RESET_DIDR0, ADC0); //РѕС‚РєР»СЋС‡РµРЅРёРµ С†РёС„СЂРѕРІРѕРіРѕ РІС…РѕРґР°
 			break;
 		case 1:
 			MODIFY_REG(ADMUX, RESET_MUX, ADC1);
@@ -45,21 +45,21 @@ void set_ADC_channel(uint8_t adc_ch){
 }
 
 void ADC_init(void){
-	MODIFY_REG(ADMUX,RESET_REFERENCE,AVCC_REF<<6);		//опора(измерить мультиметром) 4.64в
-	MODIFY_REG(ADCSRA, RESET_ADC_PRESC, ADCDIV_128);	//делитель 16000000/128= 125 кГц
+	MODIFY_REG(ADMUX,RESET_REFERENCE,AVCC_REF<<6);		//РѕРїРѕСЂР°(РёР·РјРµСЂРёС‚СЊ РјСѓР»СЊС‚РёРјРµС‚СЂРѕРј) 4.64РІ
+	MODIFY_REG(ADCSRA, RESET_ADC_PRESC, ADCDIV_128);	//РґРµР»РёС‚РµР»СЊ 16000000/128= 125 РєР“С†
 	MODIFY_REG(ADCSRB,RESET_TRIGGER,TC0_COMPA); 
-	SET_BIT(ADCSRA,1 << ADATE|1 << ADIE);				//автозапуск отключен,включены прерывания АЦП
+	SET_BIT(ADCSRA,1 << ADATE|1 << ADIE);				//Р°РІС‚РѕР·Р°РїСѓСЃРє РѕС‚РєР»СЋС‡РµРЅ,РІРєР»СЋС‡РµРЅС‹ РїСЂРµСЂС‹РІР°РЅРёСЏ РђР¦Рџ
 	set_ADC_channel(ADC1);
-	SET_BIT(ADCSRA,(1<<ADEN));								//включаем ацп	
+	SET_BIT(ADCSRA,(1<<ADEN));								//РІРєР»СЋС‡Р°РµРј Р°С†Рї	
 	
 }
 
-//функция для работы во free running mode
+//С„СѓРЅРєС†РёСЏ РґР»СЏ СЂР°Р±РѕС‚С‹ РІРѕ free running mode
 uint16_t get_ADC_data(uint8_t adc_ch){
 	if(adc_ch>8)return ERROR;
 	uint16_t result=0;
-	set_ADC_channel(adc_ch);							//выбор канала мультиплексора ацп
-	SET_BIT(ADCSRA,(1<<ADSC));                        //начало преобразования
+	set_ADC_channel(adc_ch);							//РІС‹Р±РѕСЂ РєР°РЅР°Р»Р° РјСѓР»СЊС‚РёРїР»РµРєСЃРѕСЂР° Р°С†Рї
+	SET_BIT(ADCSRA,(1<<ADSC));                        //РЅР°С‡Р°Р»Рѕ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
 	while(!READ_BIT(ADCSRA,(1<<ADIF))){};
 	return result = ADCL | (ADCH << 8);	
 }
@@ -83,7 +83,7 @@ void ema_filter_array(volatile uint16_t *data,  uint8_t size, float alpha) {
 		data[i-1] = ema_filter(data[i], data[i-1], alpha);
 	}
 }
-//256 раз АЦП пинается таймером 0
+//256 СЂР°Р· РђР¦Рџ РїРёРЅР°РµС‚СЃСЏ С‚Р°Р№РјРµСЂРѕРј 0
 ISR(ADC_vect){
 	ADC_data[adc_dt++] = ADCL|(ADCH << 8);
 }

@@ -1,4 +1,4 @@
-#ifndef ADC_H_
+п»ї#ifndef ADC_H_
 #define ADC_H_
 
 #include <avr/io.h>
@@ -34,7 +34,7 @@
 #define ADCDIV_128         0x07
 
 #define FREE_RUN           0x00
-#define AN_COMP            0x01 //компаратор
+#define AN_COMP            0x01 //РєРѕРјРїР°СЂР°С‚РѕСЂ
 #define INT_REQ_0          0x02
 #define TC0_COMPA          0x03
 #define TC0_OVF            0x04
