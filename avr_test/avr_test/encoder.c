@@ -1,21 +1,16 @@
 #include "encoder.h"
 
 volatile uint8_t flag = 0;
-
- volatile uint8_t	shortpress_enc_but=0,
+volatile uint8_t	shortpress_enc_but=0,
 					shortpress_but=0,
 					longpress_enc_but=0,
 					longpress_but=0;
- 
- 
- 
  volatile uint8_t	newState=3,
 					oldState=3,
 					upState=0,
 					downState=0,
 					encoder_value=0,
 					buttonState=0;																	//переменные для работы с энкодером
-
 volatile uint8_t	encoder_state=0;
 volatile uint8_t	adc_conv_flag=0;
 volatile uint8_t	adc_conv=0;  

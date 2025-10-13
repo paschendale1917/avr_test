@@ -1,5 +1,4 @@
 #include "handlers.h"
-
 void hardware_init(void){
 	enc_ports_init();
 	timer0_init();                //таймер обслуживает средства ввода и используется для выставления флага обновления данных с bme280
