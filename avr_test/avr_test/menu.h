@@ -16,6 +16,7 @@
 #include "PWM.h"
 #include "mpu6050.h"
 #include "bme280.h"
+#include "handlers.h"
 
 
 #define MENU_COLOR														GREEN
@@ -83,6 +84,8 @@ void display_pointer(const char *pointer);
 void draw_pointer(MenuItem *ptr);
 void clear_pointer(MenuItem *ptr);
 void clear_pointer_coord(MenuItem *ptr);
-void main_menu_it4_handler(void);
+void menu_navigate_next(void);
+void menu_navigate_prev(void);
+
 
 #endif /* MENU_H_ */

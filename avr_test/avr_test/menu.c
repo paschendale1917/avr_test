@@ -7,13 +7,14 @@ uint8_t enc=0,prev_enc=0;
 
 uint8_t pointer_clear_flag=0;
 
-const char *main_menu[]={"MENU_ITEM_1","MENU_ITEM_2","MENU_ITEM_3","MENU_ITEM_4"};
+const char *main_menu[]={"MENU_ITEM_1","MENU_ITEM_2","MENU_ITEM_3","ABOUT"};
 const char *item_1_menu[]={"MENU_ITEM_1.1","MENU_ITEM_1.2","MENU_ITEM_1.3"};
 const char *item_2_menu[]={"MENU_ITEM_2.1","MENU_ITEM_2.2"};
 const char *item_3_menu[]={"MENU_ITEM_3.1","MENU_ITEM_3.2","MENU_ITEM_3.3","MENU_ITEM_3.4","MENU_ITEM_3.5"};
 const char *pointer=">";
 
-//указатель на текущий пункт меню
+//указатель на структуру, описывающую текущий пункт меню
+//в него будем грузить адреса требуемых пунктов(например, при нажатии кнопок или вращении ручки энкодера)
 MenuItem *current_menu = NULL;
 
 //создаем пункты меню
@@ -22,14 +23,16 @@ MenuItem menu_item_1_1,menu_item_1_2,menu_item_1_3;
 MenuItem menu_item_2_1,menu_item_2_2;
 MenuItem menu_item_3_1,menu_item_3_2,menu_item_3_3,menu_item_3_4,menu_item_3_5;
 
-
+//в этих структурах описываются все связи пунктов меню, а также инфа об указателе > на них
+//при перемещении указателя вся инфа берется отсюда
+//описание всех элементов структуры в заголовочном файле
 void menu_init(MenuItem* start_menu) {
 	const uint8_t line_height = pgm_read_byte(MENU_FONT + 1) + 2;
 	//главное меню
 	main_menu_item_1 = (MenuItem){main_menu, 4, NULL, &main_menu_item_4, &main_menu_item_2, NULL, &menu_item_1_1, X_POINTER_OFFSET, Y_POINTER_OFFSET};
 	main_menu_item_2 = (MenuItem){main_menu, 4, NULL, &main_menu_item_1, &main_menu_item_3, NULL, &menu_item_2_1, X_POINTER_OFFSET, Y_POINTER_OFFSET + 1 * line_height};
 	main_menu_item_3 = (MenuItem){main_menu, 4, NULL, &main_menu_item_2, &main_menu_item_4, NULL, &menu_item_3_1, X_POINTER_OFFSET, Y_POINTER_OFFSET + 2 * line_height};
-	main_menu_item_4 = (MenuItem){main_menu, 4, NULL, &main_menu_item_3, &main_menu_item_1, NULL, NULL,			  X_POINTER_OFFSET, Y_POINTER_OFFSET + 3 * line_height};
+	main_menu_item_4 = (MenuItem){main_menu, 4, about_handler, &main_menu_item_3, &main_menu_item_1, NULL, NULL,			  X_POINTER_OFFSET, Y_POINTER_OFFSET + 3 * line_height};
 	
 	//меню второго уровня вложенности пункта 1 главного меню
 	menu_item_1_1 = (MenuItem){item_1_menu, 3, NULL, &menu_item_1_3, &menu_item_1_2, &main_menu_item_1, NULL,  X_POINTER_OFFSET, Y_POINTER_OFFSET};
@@ -66,12 +69,12 @@ void clear_pointer_coord(MenuItem *ptr){
 
 void display_pointer(const char *pointer) {
 	static MenuItem *prev_menu = NULL;
-	if(pointer_clear_flag) {
-		if(prev_menu != NULL && prev_menu != current_menu) {  // очищаем старый указатель если меню изменилось
+	if(pointer_clear_flag) {                                  //если произошел поворот ручки энкодера и вследсвие этого выставлен флаг
+		if(prev_menu != NULL && prev_menu != current_menu) {  //  если меню изменилось очищаем старый указатель
 			clear_pointer(prev_menu);
 		}
-		draw_pointer(current_menu);
-		prev_menu = current_menu;
+		draw_pointer(current_menu);							//отрисовываем указатель нового меню
+		prev_menu = current_menu;							//запоминаем, что у нас произошел поворот ручки 
 		pointer_clear_flag = 0;
 	}
 }
@@ -85,15 +88,16 @@ void display_current_menu(uint8_t xstart, uint8_t ystart) {
 	}
 }
 
-void clear_current_menu(uint8_t xstart, uint8_t ystart) {
+//очищаем только те области, что были закрашены. полное очищение дольше и визуально подмаргивает дисплей
+void clear_current_menu(uint8_t xstart, uint8_t ystart) { 
 	uint8_t space=pgm_read_byte(MENU_FONT+1)+2;
 	for(uint8_t i=0;i<current_menu->num_menu_items;i++){
 		draw_string(xstart,ystart+space*i,*(current_menu->menu_name+i), MENUFONT_SPACE, BACKGROUND_COLOR, BACKGROUND_COLOR,MENU_FONT);
 	}
-	clear_pointer(current_menu);
-	
+	clear_pointer(current_menu);	
 }
 
+//выход в меню более высокого уровня из дочернего меню
 void enter_upmenu(void) {
 	clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
 	if(current_menu->parent != NULL||current_menu->action!=NULL) {
@@ -103,6 +107,7 @@ void enter_upmenu(void) {
 	}
 }
 
+//вход в дочернее меню
 void enter_submenu(void) {
 	clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
 	if(current_menu->child != NULL) {
@@ -112,12 +117,16 @@ void enter_submenu(void) {
 	}
 }
 
-void execute_menu_action(void) {                               // функция запуска обработчика пункта меню, если он есть для данного пункта меню
+// функция запуска обработчика пункта меню
+void execute_menu_action(void) {                               
 	if (current_menu->action)current_menu->action();
 }
 
-void main_menu_it4_handler(void) {
-	clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
-	update_bme280();
+void menu_navigate_next(void){
+	current_menu = current_menu->next;	
+}
+
+void menu_navigate_prev(void){
+	current_menu = current_menu->prev;
 }
 

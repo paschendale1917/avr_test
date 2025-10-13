@@ -1,5 +1,8 @@
 ﻿#include "handlers.h"
 
+uint8_t menustate =255;
+uint8_t clear_display_flag=0;
+
 void hardware_init(void){
 	enc_ports_init();
 	timer0_init();                //таймер обслуживает средства ввода и используется для выставления флага обновления данных с bme280
@@ -54,23 +57,21 @@ void test_handler(void){
 	 prev_enc=enc;	
 }
 
-void enc_process(void){
+void menu_process(void){
 	switch(readButtonState()){
 				case ENC_LEFT:
-					pwm_value--;
-					enc--;
-					current_menu = current_menu->prev;
-					pointer_clear_flag=1;
-					display_pointer(pointer);
+					//pwm_value--;
+					//enc--;
+					menu_navigate_prev(); //если поворот влево, то в указатель пункта меню пишем адрес структуры, описывающей предыдущий пункт меню
+					pointer_clear_flag=1; //флаг используется для того, чтобы указатель перерисовывался не постоянно, тратя ресурсы мк, а только тогда, когда происходит поворот ручки энкодера
 					resetButton();
 					break ;
 				
 				case ENC_RIGHT:
-					pwm_value++;
-					enc++;
-					current_menu = current_menu->next;
+					//pwm_value++;
+					//enc++;
+					menu_navigate_next();
 					pointer_clear_flag=1;
-					display_pointer(pointer);
 					resetButton();
 					break ;
 				
@@ -84,20 +85,55 @@ void enc_process(void){
 					
 				case BUTTON_MENUITEMBACK:
 					enter_upmenu();	
-					display_pointer(pointer);	
 					resetButton();
 					break ;
 				
 				case BUTTON_SELECT:
 					execute_menu_action();											//запуск обработчика функции 
 					enter_submenu();												//в current_menu адрес дочернего пункта меню
-					display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
-					display_pointer(pointer);
 					resetButton();
 					break ;
 				
 				default:
 					display_pointer(pointer);
 					break ;
+	}
+}
+
+void main_screen_handler(void){
+	menustate=0;
+	if(clear_display_flag){
+		clear_display();
+		clear_display_flag=0;
+	}
+	update_bme280();
+}
+
+void backlight_handler(void){
+	
+}
+
+void ADC_handler(void){
+	
+}
+
+
+void return_from_handler(void){
+	menustate=MENU_PROCESS;												//пишем в переменную статуса меню любое значение, которое не отслеживает switch  в бесконечном цикле
+	clear_display();													//очищаем дисплей от экрана обработчика
+	display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);					//выводим текущее меню
+	draw_pointer(current_menu);											//отрисовываем указатель заново
+	resetButton();														//обязательно сбросить флаг нажатой кнопки, иначе он будет висеть и кнопка окажется недееспособной
+}
+
+void about_handler(void){
+	menustate=3;
+	if(clear_display_flag){													//очистить нужно единожды, поэтому был введен флаг очистки дисплея                           
+		clear_display();
+		clear_display_flag=0;
+	}
+	draw_string(0,0,"Bryansk 2025",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
+	if(readButtonState()==BUTTON_MENUITEMBACK){								//в обработчике ожидаем нжатие кнопки возврата, если оно происходит, то
+		return_from_handler();												//вызываем функцию возврата к меню
 	}
 }
