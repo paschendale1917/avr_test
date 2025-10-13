@@ -10,33 +10,33 @@ volatile uint8_t	shortpress_enc_but=0,
 					upState=0,
 					downState=0,
 					encoder_value=0,
-					buttonState=0;																	//РїРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ СЌРЅРєРѕРґРµСЂРѕРј
+					buttonState=0;																	//переменные для работы с энкодером
 volatile uint8_t	encoder_state=0;
 volatile uint8_t	adc_conv_flag=0;
 volatile uint8_t	adc_conv=0;  
-volatile uint8_t	update_bme280_flag=0;                                                           //РїРµСЂРµРјРµРЅРЅР°СЏ, РєРѕС‚РѕСЂСѓСЋ Р±СѓРґРµРј СЋР·Р°С‚СЊ РґР»СЏ РІСЃСЏРєРёС… РѕС‚СЃС‡РµС‚РѕРІ
+volatile uint8_t	update_bme280_flag=0;                                                           //переменная, которую будем юзать для всяких отсчетов
 
 
  void enc_ports_init(void){
-	 CLEAR_BIT(ENCODER_DDR,(1<<ENC_CLK)|(1<<ENC_DT)|(1<<ENC_BUTTON));								//РЅР° РІС…РѕРґ РЅРѕР¶РєРё СЌРЅРєРѕРґРµСЂР° Рё РєРЅРѕРїРєР° СЌРЅРєРѕРґРµСЂР°
-	 SET_BIT(ENCODER_PORT,(1<<ENC_BUTTON));															//РїРѕРґС‚СЏР¶РєР° СЌРЅРєРѕРґРµСЂР° Рё РєРЅРѕРїРєРё СЌРЅРєРѕРґРµСЂР°
+	 CLEAR_BIT(ENCODER_DDR,(1<<ENC_CLK)|(1<<ENC_DT)|(1<<ENC_BUTTON));								//на вход ножки энкодера и кнопка энкодера
+	 SET_BIT(ENCODER_PORT,(1<<ENC_BUTTON));															//подтяжка энкодера и кнопки энкодера
 	 
 	 CLEAR_BIT(BUTTON_DDR,(1<<BUTTON));
 	 SET_BIT(BUTTON_PORT,(1<<BUTTON));
 }
 
- /*РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєР°РЅР°Р»Р° Рђ С‚Р°Р№РјРµСЂР° 0*/
+ /*инициализация канала А таймера 0*/
  void timer0_init(){ 
 	 encoder_state|=(1<<ENC_DT)|(1<<ENC_CLK);
-	 TCNT0=0;																						//РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№ РїРёС€РµРј РІ СЃС‡РµС‚РЅС‹Р№ СЂРµРіРёСЃС‚СЂ 0
-	 SET_BIT(TCCR0A,(1<<WGM01));																	//СЃР±СЂРѕСЃ Р·РЅР°С‡РµРЅРёСЏ РІ  СЃС‡РµС‚РЅРѕРј СЂРµРіРёСЃС‚СЂРµ РїСЂРё СЃРѕРІРїР°РґРµРЅРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј РІ СЂРµРіРёСЃС‚СЂРµ СЃСЂР°РІРЅРµРЅРёСЏ 
-	 SET_BIT(TCCR0B,(1<<CS02|1<<CS00));																//РґРµР»РёС‚РµР»СЊ 1024; 16000000/1024=15625 С‚РёРєРѕРІ РІ СЃРµРєСѓРЅРґСѓ
-	 OCR0A=61;																						// 15625/61=256, РіРґРµ 256 - С‡Р°СЃС‚РѕС‚Р° РѕРїСЂРѕСЃР°(РІРѕР·РЅРёРєРЅРѕРІРµРЅРёСЏ РїСЂРµСЂС‹РІР°РЅРёСЏ РїСЂРё СЃРѕРІРїР°РґРµРЅРёРё)
-	SET_BIT(TIMSK0,(1<<OCIE0A));																	//СЂР°Р·СЂРµС€Р°РµРј РїСЂРµСЂС‹РІР°РЅРёСЏ РїСЂРё СЃРѕРІРїР°РґРµРЅРёРё
+	 TCNT0=0;																						//на всякий случай пишем в счетный регистр 0
+	 SET_BIT(TCCR0A,(1<<WGM01));																	//сброс значения в  счетном регистре при совпадении со значением в регистре сравнения 
+	 SET_BIT(TCCR0B,(1<<CS02|1<<CS00));																//делитель 1024; 16000000/1024=15625 тиков в секунду
+	 OCR0A=61;																						// 15625/61=256, где 256 - частота опроса(возникновения прерывания при совпадении)
+	SET_BIT(TIMSK0,(1<<OCIE0A));																	//разрешаем прерывания при совпадении
  }
  
  ISR(TIMER0_COMPA_vect){
-	static uint8_t count_enc_but = 0;																//СЃС‡РµС‚С‡РёРєРё
+	static uint8_t count_enc_but = 0;																//счетчики
     static uint8_t count_but = 0;
 	newState=(ENCODER_PIN&encoder_state)>>2;
 	if(newState!=oldState){
@@ -61,37 +61,37 @@ volatile uint8_t	update_bme280_flag=0;                                          
 		 }
 		 oldState=newState;
 	 }
-	//РѕР±СЂР°Р±РѕС‚РєР° РєРЅРѕРїРєРё СЌРЅРєРѕРґРµСЂР°
+	//обработка кнопки энкодера
 	 if(!READ_BIT(ENCODER_PIN,(1<<ENC_BUTTON))){										
 		if(count_enc_but < 255) {
 		 count_enc_but++;
 		}
 	}
-	  if(count_enc_but>LONG_TIMEOUT ) {																//РґР»РёРЅРЅРѕРµ РЅР°Р¶Р°С‚РёРµ
+	  if(count_enc_but>LONG_TIMEOUT ) {																//длинное нажатие
 		 if(READ_BIT(ENCODER_PIN,(1<<ENC_BUTTON))){
 			longpress_enc_but=1;
 			 count_enc_but=0;
 		 }
 	  }
-	  if(count_enc_but>0 && count_enc_but<LONG_TIMEOUT) {											//РєРѕСЂРѕС‚РєРѕРµ РЅР°Р¶Р°С‚РёРµ
+	  if(count_enc_but>0 && count_enc_but<LONG_TIMEOUT) {											//короткое нажатие
 		  if(READ_BIT(ENCODER_PIN,(1<<ENC_BUTTON))) {
 			  shortpress_enc_but=1;
 			  count_enc_but=0;
 		  }
 	  }
-	 //РѕР±СЂР°Р±РѕС‚РєР° РѕС‚РґРµР»СЊРЅРѕР№ РєРЅРѕРїРєРё
+	 //обработка отдельной кнопки
 	 if(!READ_BIT(BUTTON_PIN,(1<<BUTTON))){												
 		if(count_but < 255) {
 		count_but++;
 		}
 	}
-	if(count_but>0 && count_but< LONG_TIMEOUT) {									//РєРѕСЂРѕС‚РєРѕРµ РЅР°Р¶Р°С‚РёРµ
+	if(count_but>0 && count_but< LONG_TIMEOUT) {									//короткое нажатие
 		if(READ_BIT(BUTTON_PIN,(1<<BUTTON))) {
 			shortpress_but=1;
 			count_but=0;
 		}
 	}
-	if(count_but >LONG_TIMEOUT ) {													 //РґР»РёРЅРЅРѕРµ РЅР°Р¶Р°С‚РёРµ
+	if(count_but >LONG_TIMEOUT ) {													 //длинное нажатие
 		if(READ_BIT(BUTTON_PIN,(1<<BUTTON))){
 			longpress_but=1;
 			count_but=0;

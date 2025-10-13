@@ -8,13 +8,13 @@ void i2c_init(void){
 
 uint8_t start_cond(void){
 	uint8_t status=0;
-	SET_BIT(TWCR,(1<<TWINT)|(1<<TWSTA)|(1<<TWEN));									//условие старта
-	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
+	SET_BIT(TWCR,(1<<TWINT)|(1<<TWSTA)|(1<<TWEN));									//СѓСЃР»РѕРІРёРµ СЃС‚Р°СЂС‚Р°
+	while(!READ_BIT(TWCR,(1<<TWINT))){												//РѕР¶РёРґР°РµРј СѓСЃС‚Р°РЅРѕРІРєРё С„Р»Р°РіР° TWINT, С‡С‚Рѕ Р±СѓРґРµС‚ РѕР·РЅР°С‡Р°С‚СЊ РЅР°С‡Р°Р»Рѕ РїРµСЂРµРґР°С‡Рё
 		//	 while_delay=adc_conv;
-		//	if(adc_conv-while_delay>30) return START_ERROR;                         //если во время ожидания превышено время, то выходим из функции(чтобы не висло)
+		//	if(adc_conv-while_delay>30) return START_ERROR;                         //РµСЃР»Рё РІРѕ РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ РїСЂРµРІС‹С€РµРЅРѕ РІСЂРµРјСЏ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· С„СѓРЅРєС†РёРё(С‡С‚РѕР±С‹ РЅРµ РІРёСЃР»Рѕ)
 	};
 	status=TWSR&0xF8;
-	if ((status == 0x08)|(status == 0x10))											//проверка битов старта или рестарта регистра статуса TWSR
+	if ((status == 0x08)|(status == 0x10))											//РїСЂРѕРІРµСЂРєР° Р±РёС‚РѕРІ СЃС‚Р°СЂС‚Р° РёР»Рё СЂРµСЃС‚Р°СЂС‚Р° СЂРµРіРёСЃС‚СЂР° СЃС‚Р°С‚СѓСЃР° TWSR
 	return START_ERROR;
 	else
 	return SUCCESS;
@@ -23,13 +23,13 @@ uint8_t start_cond(void){
 
 uint8_t i2c_sendbyte(uint8_t byte){
 	WRITE_REG(TWDR,byte);
-	WRITE_REG(TWCR,(1<<TWINT) | (1<<TWEN));											//запускаем передачу
-	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
+	WRITE_REG(TWCR,(1<<TWINT) | (1<<TWEN));											//Р·Р°РїСѓСЃРєР°РµРј РїРµСЂРµРґР°С‡Сѓ
+	while(!READ_BIT(TWCR,(1<<TWINT))){												//РѕР¶РёРґР°РµРј СѓСЃС‚Р°РЅРѕРІРєРё С„Р»Р°РіР° TWINT, С‡С‚Рѕ Р±СѓРґРµС‚ РѕР·РЅР°С‡Р°С‚СЊ РЅР°С‡Р°Р»Рѕ РїРµСЂРµРґР°С‡Рё
 		//	 while_delay=adc_conv;
 		//	if(adc_conv-while_delay>30) return SEND_ERROR;
 	};
-	uint8_t status = TWSR & 0xF8;													// Считывание кода статуса
-	if ((status == 0x18) | (status == 0x28) | (status == 0x40))						// проверка кода статуса (передача SLA+W, пакета данных, SLA+R)
+	uint8_t status = TWSR & 0xF8;													// РЎС‡РёС‚С‹РІР°РЅРёРµ РєРѕРґР° СЃС‚Р°С‚СѓСЃР°
+	if ((status == 0x18) | (status == 0x28) | (status == 0x40))						// РїСЂРѕРІРµСЂРєР° РєРѕРґР° СЃС‚Р°С‚СѓСЃР° (РїРµСЂРµРґР°С‡Р° SLA+W, РїР°РєРµС‚Р° РґР°РЅРЅС‹С…, SLA+R)
 	return ACK;
 	else
 	return NACK;
@@ -40,14 +40,14 @@ void stop_cond(void){
 	SET_BIT(TWCR,(1<<TWINT)|(1<<TWSTO)|(1<<TWEN));
 }
 
-uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status определяет, что будем отправлять слейву после приема байта-nack или ack
+uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status РѕРїСЂРµРґРµР»СЏРµС‚, С‡С‚Рѕ Р±СѓРґРµРј РѕС‚РїСЂР°РІР»СЏС‚СЊ СЃР»РµР№РІСѓ РїРѕСЃР»Рµ РїСЂРёРµРјР° Р±Р°Р№С‚Р°-nack РёР»Рё ack
 	if (nack_status == ACK)
 	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN|1<<TWEA));
 	else
-	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN));										//снюхиваем байт и передаем NACK(если забирая последний байт у слева не сказать ему NACK, то он продолжит удерживать линию и дальнейшая работа с шиной станет невозможна)
-	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
+	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN));										//СЃРЅСЋС…РёРІР°РµРј Р±Р°Р№С‚ Рё РїРµСЂРµРґР°РµРј NACK(РµСЃР»Рё Р·Р°Р±РёСЂР°СЏ РїРѕСЃР»РµРґРЅРёР№ Р±Р°Р№С‚ Сѓ СЃР»РµРІР° РЅРµ СЃРєР°Р·Р°С‚СЊ РµРјСѓ NACK, С‚Рѕ РѕРЅ РїСЂРѕРґРѕР»Р¶РёС‚ СѓРґРµСЂР¶РёРІР°С‚СЊ Р»РёРЅРёСЋ Рё РґР°Р»СЊРЅРµР№С€Р°СЏ СЂР°Р±РѕС‚Р° СЃ С€РёРЅРѕР№ СЃС‚Р°РЅРµС‚ РЅРµРІРѕР·РјРѕР¶РЅР°)
+	while(!READ_BIT(TWCR,(1<<TWINT))){												//РѕР¶РёРґР°РµРј СѓСЃС‚Р°РЅРѕРІРєРё С„Р»Р°РіР° TWINT, С‡С‚Рѕ Р±СѓРґРµС‚ РѕР·РЅР°С‡Р°С‚СЊ РЅР°С‡Р°Р»Рѕ РїРµСЂРµРґР°С‡Рё
 		//	while_delay=adc_conv;
-		//	if(adc_conv-while_delay>30) return SEND_ERROR;                          //если во время ожидания превышено время, то выходим из функции
+		//	if(adc_conv-while_delay>30) return SEND_ERROR;                          //РµСЃР»Рё РІРѕ РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ РїСЂРµРІС‹С€РµРЅРѕ РІСЂРµРјСЏ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· С„СѓРЅРєС†РёРё
 	};
 	return TWDR;
 }
@@ -58,7 +58,7 @@ void i2c_scanner(uint8_t *scans){
 		start_cond();
 		uint8_t answ=i2c_sendbyte(i);
 		if(answ==ACK){
-			i2c_readbyte(NACK);														//слейву необходимо отправить NACK, чтобы он не держал линию
+			i2c_readbyte(NACK);														//СЃР»РµР№РІСѓ РЅРµРѕР±С…РѕРґРёРјРѕ РѕС‚РїСЂР°РІРёС‚СЊ NACK, С‡С‚РѕР±С‹ РѕРЅ РЅРµ РґРµСЂР¶Р°Р» Р»РёРЅРёСЋ
 			stop_cond();
 			scans[cntr++]=i;
 			print_hexnumber(i);

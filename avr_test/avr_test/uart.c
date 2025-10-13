@@ -2,19 +2,19 @@
 #include <avr/io.h>
 
 void uart_init(void){
-	WRITE_REG(UCSR0B ,(1<<TXEN0|1<<RXEN0));							//включаем приемник и передатчик					
-	WRITE_REG(UCSR0C,(1<<UCSZ01|1<<UCSZ00));						//асинхронный режим, 1 стоп бит, 8бит, без бита четности
+	WRITE_REG(UCSR0B ,(1<<TXEN0|1<<RXEN0));							//РІРєР»СЋС‡Р°РµРј РїСЂРёРµРјРЅРёРє Рё РїРµСЂРµРґР°С‚С‡РёРє					
+	WRITE_REG(UCSR0C,(1<<UCSZ01|1<<UCSZ00));						//Р°СЃРёРЅС…СЂРѕРЅРЅС‹Р№ СЂРµР¶РёРј, 1 СЃС‚РѕРї Р±РёС‚, 8Р±РёС‚, Р±РµР· Р±РёС‚Р° С‡РµС‚РЅРѕСЃС‚Рё
 	WRITE_REG(UBRR0L,(uint8_t)(SPEED & 0xFF));
 	WRITE_REG(UBRR0H,(uint8_t)(SPEED >> 8));
 }
 
-void uart_out(uint8_t data){										// передача байта через UART
-	while(!READ_BIT(UCSR0A,(1<<UDRE0)));							// ожидание готовности UART к передаче
-	WRITE_REG(UDR0,data);											// запись в регистр UDR байта данных начинает процесс передачи
+void uart_out(uint8_t data){										// РїРµСЂРµРґР°С‡Р° Р±Р°Р№С‚Р° С‡РµСЂРµР· UART
+	while(!READ_BIT(UCSR0A,(1<<UDRE0)));							// РѕР¶РёРґР°РЅРёРµ РіРѕС‚РѕРІРЅРѕСЃС‚Рё UART Рє РїРµСЂРµРґР°С‡Рµ
+	WRITE_REG(UDR0,data);											// Р·Р°РїРёСЃСЊ РІ СЂРµРіРёСЃС‚СЂ UDR Р±Р°Р№С‚Р° РґР°РЅРЅС‹С… РЅР°С‡РёРЅР°РµС‚ РїСЂРѕС†РµСЃСЃ РїРµСЂРµРґР°С‡Рё
 }
 
-uint8_t uart_in(void){												//прием байта из UART
-	while(!READ_BIT(UCSR0A,(1<<RXC0)));								//ожидание прихода байта
+uint8_t uart_in(void){												//РїСЂРёРµРј Р±Р°Р№С‚Р° РёР· UART
+	while(!READ_BIT(UCSR0A,(1<<RXC0)));								//РѕР¶РёРґР°РЅРёРµ РїСЂРёС…РѕРґР° Р±Р°Р№С‚Р°
 	return UDR0;										
 }
 

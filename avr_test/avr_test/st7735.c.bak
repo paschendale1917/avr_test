@@ -15,10 +15,10 @@ const uint8_t gmctrn1_data[] = {
 
 	
 void st7735_ports_init(void){
-SET_BIT(SPI_DDR,(1<<BKL));   // Ð¿Ð¾Ð´ÑÐ²ÐµÑ‚ÐºÐ°
-SET_BIT(SPI_DDR,(1<<DC));    // Ð´Ð°Ð½Ð½Ñ‹Ðµ/ÐºÐ¾Ð¼Ð°Ð½Ð´Ð°
-SET_BIT(SPI_DDR,(1<<RESET)); // ÑÐ±Ñ€Ð¾Ñ
-SET_BIT(SPI_DDR,(1<<CS));    // Ñ‡Ð¸Ð¿ ÑÐµÐ»ÐµÐºÑ‚
+SET_BIT(SPI_DDR,(1<<BKL));   // ïîäñâåòêà
+SET_BIT(SPI_DDR,(1<<DC));    // äàííûå/êîìàíäà
+SET_BIT(SPI_DDR,(1<<RESET)); // ñáðîñ
+SET_BIT(SPI_DDR,(1<<CS));    // ÷èï ñåëåêò
 }
 
 void send_command(uint8_t byte){
@@ -130,27 +130,27 @@ void draw_image(uint16_t x_start, uint16_t x_stop, uint16_t y_start, uint16_t y_
 
 void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bcolor,uint16_t fcolor,uint8_t *font) {
 	
-	// ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ ÑˆÑ€Ð¸Ñ„Ñ‚Ð°
-	const uint8_t data_w = pgm_read_byte(font) / 8;     // ÑˆÐ¸Ñ€Ð¸Ð½Ð° Ð² Ð±Ð°Ð¹Ñ‚Ð°Ñ…
-	const uint8_t letter_height = pgm_read_byte(font + 1);  // Ð²Ñ‹ÑÐ¾Ñ‚Ð° ÑÐ¸Ð¼Ð²Ð¾Ð»Ð°
-	const uint8_t letter_width = data_w * 8;            // ÑˆÐ¸Ñ€Ð¸Ð½Ð° ÑÐ¸Ð¼Ð²Ð¾Ð»Ð° Ð² Ð¿Ð¸ÐºÑÐµÐ»ÑÑ…
-	const uint8_t ascii_offset = pgm_read_byte(font + 2);  // ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ðµ ASCII
+	// Ïîëó÷àåì ïàðàìåòðû øðèôòà
+	const uint8_t data_w = pgm_read_byte(font) / 8;     // øèðèíà â áàéòàõ
+	const uint8_t letter_height = pgm_read_byte(font + 1);  // âûñîòà ñèìâîëà
+	const uint8_t letter_width = data_w * 8;            // øèðèíà ñèìâîëà â ïèêñåëÿõ
+	const uint8_t ascii_offset = pgm_read_byte(font + 2);  // ñìåùåíèå ASCII
 	
-	// Ð’Ñ‹Ñ‡Ð¸ÑÐ»ÑÐµÐ¼ ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ðµ ÑÐ¸Ð¼Ð²Ð¾Ð»Ð° Ð² Ð¼Ð°ÑÑÐ¸Ð²Ðµ
+	// Âû÷èñëÿåì ñìåùåíèå ñèìâîëà â ìàññèâå
 	const uint16_t offset = (letter - ascii_offset) * letter_height * data_w + 4;
 	const uint16_t lettersize = letter_height * data_w;
 	
-	// Ð‘ÑƒÑ„ÐµÑ€ Ð´Ð»Ñ Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ñ Ð´Ð°Ð½Ð½Ñ‹Ñ… ÑÐ¸Ð¼Ð²Ð¾Ð»Ð°
+	// Áóôåð äëÿ õðàíåíèÿ äàííûõ ñèìâîëà
 	uint8_t letter_buf[400] = {0};
 	
-	// Ð¡Ñ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ðµ ÑÐ¸Ð¼Ð²Ð¾Ð»Ð° Ð¸Ð· Ð¿Ð°Ð¼ÑÑ‚Ð¸
+	// Ñ÷èòûâàåì äàííûå ñèìâîëà èç ïàìÿòè
 	for(uint16_t i = 0; i < lettersize; i++) {
 		letter_buf[i] = pgm_read_byte(font + offset + i);
 	}
 	
-	// Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸ÑŽ Ð¸ Ñ€ÐµÐ¶Ð¸Ð¼ Ð·Ð°Ð¿Ð¸ÑÐ¸
+	// Óñòàíàâëèâàåì ïîçèöèþ è ðåæèì çàïèñè
 	START_Tx;
-	setXY(xstart, letter_width, ystart, letter_height);  // Ð£ÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÐ¼ Ñ€ÐµÐ°Ð»ÑŒÐ½Ñ‹Ðµ Ñ€Ð°Ð·Ð¼ÐµÑ€Ñ‹ ÑÐ¸Ð¼Ð²Ð¾Ð»Ð°
+	setXY(xstart, letter_width, ystart, letter_height);  // Óêàçûâàåì ðåàëüíûå ðàçìåðû ñèìâîëà
 	send_command(ST7735_RAMWR);
 	ST7735_DATA;
 	
@@ -158,7 +158,7 @@ void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bco
 		for(uint16_t x = 0; x < letter_width; x += 8) {
 			uint8_t data = letter_buf[y * data_w + x / 8];
 			for(uint8_t bit = 0; bit < 8; bit++) {
-				if (x + bit >= letter_width) break;			// Ð—Ð°Ñ‰Ð¸Ñ‚Ð° Ð¾Ñ‚ Ð²Ñ‹Ñ…Ð¾Ð´Ð° Ð·Ð° Ð³Ñ€Ð°Ð½Ð¸Ñ†Ñ‹
+				if (x + bit >= letter_width) break;			// Çàùèòà îò âûõîäà çà ãðàíèöû
 				spi_sendbyte((data & 0x80) ? (fcolor >> 8) : (bcolor >> 8));
 				spi_sendbyte((data & 0x80) ? fcolor : bcolor);
 				data <<= 1;
@@ -212,8 +212,8 @@ void draw_circle(uint8_t x, uint8_t y, uint8_t r, uint16_t color){
 
 void draw_number(uint16_t xpos,  uint16_t ypos, int32_t number, int8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font){
 	char buf[10] = {0};
-	uint8_t len = sprintf(buf, "%li", number);					//Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÐ¼ Ð´Ð»Ð¸Ð½Ñƒ Ñ‡Ð¸ÑÐ»Ð°
-	memset(buf + len, ' ', sizeof(buf) - len - 1);				// Ð¾Ñ‡Ð¸Ñ‰Ð°ÐµÐ¼ Ð»Ð¸ÑˆÐ½Ð¸Ðµ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸Ð¸                                                                                   
+	uint8_t len = sprintf(buf, "%li", number);					//îïðåäåëÿåì äëèíó ÷èñëà
+	memset(buf + len, ' ', sizeof(buf) - len - 1);				// î÷èùàåì ëèøíèå ïîçèöèè                                                                                   
 	draw_string(xpos,ypos,buf,space,bcolor,fcolor,font);
 }
 
@@ -230,7 +230,7 @@ void draw_float_number(uint16_t xpos,  uint16_t ypos, float number, const char *
 	draw_string(xpos, ypos, buf, space, bcolor, fcolor, font);
 }
 
-/*Ð¿Ð¾Ñ‚Ð¾Ð¼ Ð¿Ð¾ÐºÐ¾Ð²Ñ‹Ñ€ÑÑ‚ÑŒ*/
+/*ïîòîì ïîêîâûðÿòü*/
 uint8_t draw_2num_zero(uint16_t xpos,  uint16_t ypos, uint8_t number, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font){
 	if(number > 9 || number < 1)
 	{ return 0; }
@@ -242,7 +242,7 @@ uint8_t draw_2num_zero(uint16_t xpos,  uint16_t ypos, uint8_t number, uint8_t sp
 	int32_t num = 0;
 	num = *pt_num;
 
-	char buf_in[2] = {0}; //Ñ€Ð°Ð·Ð´ÐµÐ»ÐµÐ½Ð¸Ðµ Ñ‡Ð¸ÑÐ»Ð° Ð½Ð° Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð¸ ÑÐºÐ»Ð°Ð´Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð² Ð±ÑƒÑ„ÐµÑ€
+	char buf_in[2] = {0}; //ðàçäåëåíèå ÷èñëà íà öèôðû è ñêëàäèðîâàíèå â áóôåð
 	char buf_out[2] = {0};
 	num = *pt_num;
 	tens = num / 10;
@@ -250,12 +250,12 @@ uint8_t draw_2num_zero(uint16_t xpos,  uint16_t ypos, uint8_t number, uint8_t sp
 	buf_in[0] = tens;
 	buf_in[1] = units;
 
-	for(uint8_t j = 0; j < 2; j++) {   //Ð¿Ñ€ÐµÐ¾Ð±Ñ€Ð°Ð·Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð±ÑƒÑ„ÐµÑ€Ð° Ð² ÑÑ‚Ñ€Ð¾ÐºÑƒ
+	for(uint8_t j = 0; j < 2; j++) {   //ïðåîáðàçîâàíèå áóôåðà â ñòðîêó
 		sprintf(&buf_out[j], "%d", buf_in[j]);
 	}
 
 
-	for(uint8_t y = 0; y < 2; y++) {   //Ð²Ñ‹Ð²Ð¾Ð´ ÑÑ‚Ñ€Ð¾ÐºÐ¸ Ñ Ð¿Ð¾Ð»Ð¾Ð¶Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ð¼ Ñ‡Ð¸ÑÐ»Ð¾Ð¼
+	for(uint8_t y = 0; y < 2; y++) {   //âûâîä ñòðîêè ñ ïîëîæèòåëüíûì ÷èñëîì
 		draw_char(xpos, ypos, *(buf_out + y), bcolor, fcolor, font);
 		ypos += font[0] + space;
 	}

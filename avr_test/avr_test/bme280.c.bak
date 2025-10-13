@@ -1,6 +1,6 @@
 #include "bme280.h"
 
-//[0:2] - РґР°РІР»РµРЅРёРµ; [3:5]-С‚РµРјРїРµСЂР°С‚СѓСЂР°; [6:7]-РІР»Р°Р¶РЅРѕСЃС‚СЊ
+//[0:2] - давление; [3:5]-температура; [6:7]-влажность
 uint8_t raw_data[8] = {0};
 compensation comp_bme280={0,};
 datatype measure={0,};
@@ -57,20 +57,20 @@ uint8_t bme280_readdata(uint8_t dev_addr, uint8_t reg,uint8_t *data,uint8_t num_
 	if(status!=ACK)return ERROR;
 	   for (uint8_t cntr = 0; cntr < num_bytes; cntr++) {
 		   if (cntr < num_bytes - 1) {
-			   *(data+cntr) = i2c_readbyte(ACK);								// РѕС‚РїСЂР°РІР»В¤РµРј ACK РґР»В¤ РІСЃРµС…, РєСЂРѕРјРµ РїРѕСЃР»РµРґРЅРµРіРѕ Р±Р°Р№С‚Р°
+			   *(data+cntr) = i2c_readbyte(ACK);								// отправляем ACK для всех, кроме последнего байта
 			   } else {
-			   *(data+cntr)= i2c_readbyte(NACK);								// РѕС‚РїСЂР°РІР»В¤РµРј NACK РґР»В¤ РїРѕСЃР»РµРґРЅРµРіРѕ Р±Р°Р№С‚Р°
+			   *(data+cntr)= i2c_readbyte(NACK);								// отправляем NACK для последнего байта
 		   }
 	   }																		
 	 stop_cond();
 	 return SUCCESS;
 }
 
-//С•РµСЂРµРґР°С‡Р° РґР°РЅРЅС‹С…: Р°РґСЂРµСЃ СЂРµРіРёСЃС‚СЂР°, Р·Р°С‚РµРј Р±Р°Р№С‚ РЅР°СЃС‚СЂРѕРµРє. С›РѕР¶РЅРѕ РїРёСЃР°С‚СЊ СЃСЂР°Р·Сѓ РІРѕ РІСЃРµ СЂРµРіРёСЃС‚СЂС‹
+//Передача данных: адрес регистра, затем байт настроек. Можно писать сразу во все регистры
 uint8_t bme280_init(uint8_t hum_oversampling, uint8_t filter, uint8_t standby, uint8_t press_oversampling, uint8_t temp_oversampling, uint8_t mode)
 {
-  uint8_t  settings[6] = {CONTROL_HUM,                                                                       //Р°РґСЂРµСЃ СЂРµРіРёСЃС‚СЂР° РЅР°СЃС‚СЂРѕРµРє РёР·РјРµСЂРµРЅРёВ¤ РІР»Р°Р¶РЅРѕСЃС‚Рё
-                          SET_OVERHUM(hum_oversampling),                                                     //РЅР°СЃС‚СЂРѕР№РєРё СЂРµРіРёСЃС‚СЂР° РёР·РјРµСЂРµРЅРёВ¤ РІР»Р°Р¶РЅРѕСЃС‚Рё(СѓСЃС‚Р°РЅРѕРІР»РµРЅ РѕРІРµСЂСЃСЌРјРїР»РёРЅРі С…8)
+  uint8_t  settings[6] = {CONTROL_HUM,                                                                       //адрес регистра настроек измерения влажности
+                          SET_OVERHUM(hum_oversampling),                                                     //настройки регистра измерения влажности(установлен оверсэмплинг х8)
                           CONFIG,
                           SET_CONFIG(filter, standby),
                           CONTROL_MEAS,
@@ -91,7 +91,7 @@ void bme280_reset(void)
   uint8_t  reset[2] = {RESET, COMMAND_RESET};
   bme280_send_data(BME280_ADDR, reset, 2);
 }
- //С‡РёС‚Р°РµРј РїРѕСЂС†РёСЋ РґР°РЅРЅС‹С… СЃ РґР°С‚С‡РёРєР°
+ //читаем порцию данных с датчика
 uint8_t read_raw_data_bme280(uint8_t start_addr, uint8_t *data,  uint8_t num_bytes){
  // if(read_byte_i2c(BME280_ADDR, ID) != 0x60) { return ERROR; }
  bme280_readdata(BME280_ADDR, start_addr, data, num_bytes);
@@ -99,7 +99,7 @@ uint8_t read_raw_data_bme280(uint8_t start_addr, uint8_t *data,  uint8_t num_byt
 }
 
 
-//Р·Р°РїРёСЃСЊ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ РєРѕРјРїРµРЅСЃР°С†РёРѕРЅРЅС‹С… РєРѕРЅСЃС‚Р°РЅС‚, СЃС‡РёС‚Р°РЅРЅС‹С… СЃ РґР°С‚С‡РёРєР°
+//запись в структуру компенсационных констант, считанных с датчика
 uint8_t get_compens(compensation *dt){
   static uint8_t comp_data[NUM_COMP_BYTES_1 + NUM_COMP_BYTES_2] = {0};
   read_raw_data_bme280(START_COMP_ADDR_1, comp_data, NUM_COMP_BYTES_1);
@@ -125,7 +125,7 @@ uint8_t get_compens(compensation *dt){
   return SUCCESS;
 }
 
-//РґР»В¤ РѕС‚Р»Р°РґРєРё
+//для отладки
 void print_bme280_coef(void){
 	char str1[250];
 	sprintf(str1, "DIG_T1: %u\r\n", comp_bme280.dig_T1);
@@ -166,9 +166,9 @@ void print_bme280_coef(void){
 	print_string(str1);
 }
 
-//вЂСњвЂ“С›вЂќР‹Сџ В¬В«СЏвЂњСџ В»В« Ж’СвЂњСРЋВ»вЂњС
+//ФОРМУЛЫ ВЗЯТЫ ИЗ ДАТАШИТА
 
-// Returns temperature in DegC, resolution is 0.01 DegC. Output value of РЈ5123Р¤ equals 51.23 DegC.
+// Returns temperature in DegC, resolution is 0.01 DegC. Output value of “5123” equals 51.23 DegC.
 // t_fine carries fine temperature as global value
 
 int32_t parse_temp_bme280(compensation *dc){
@@ -190,7 +190,7 @@ int32_t parse_temp_bme280(compensation *dc){
 }
 
 // Returns pressure in Pa as unsigned 32 bit integer in Q24.8 format (24 integer bits and 8 fractional bits).
-// Output value of РЈ24674867Р¤ represents 24674867/256 = 96386.2 Pa = 963.862 hPa
+// Output value of “24674867” represents 24674867/256 = 96386.2 Pa = 963.862 hPa
 uint32_t parse_press_bme280(compensation *dc){
  // char str[100];
   uint8_t press_data[3]={0};
@@ -218,7 +218,7 @@ uint32_t parse_press_bme280(compensation *dc){
 }
 
 // Returns humidity in %RH as unsigned 32 bit integer in Q22.10 format (22 integer and 10 fractional bits).
-// Output value of РЈ47445Р¤ represents 47445/1024 = 46.333 %RH
+// Output value of “47445” represents 47445/1024 = 46.333 %RH
 uint32_t parse_hum_bme280(compensation *dc){
   //char str[100];
   uint8_t hum_data[2]={0};
@@ -247,8 +247,8 @@ void add_record(record *dt){
   dt->hum=(float)parse_hum_bme280(&comp_bme280)/1024;
 }
 
-//Р·Р°РІРѕРґРёРј Р»СЋР±РѕР№ С‚Р°Р№РјРµСЂ, РЅР°СЃС‚СЂР°РёРІР°РµРј РЅР° РЅСѓР¶РЅСѓСЋ С‡Р°СЃС‚РѕС‚Сѓ РїСЂРµСЂС‹РІР°РЅРёР№ Рё РІР·РІРѕРґРёРј С„Р»Р°Рі РѕР±РЅРѕРІР»РµРЅРёВ¤ РґР°РЅРЅС‹С… РІ РїСЂРµСЂС‹РІР°РЅРёРё
-//РєРѕРЅРєСЂРµС‚РЅРѕ Р·РґРµСЃСЊ РёСЃРїРѕР»СЊР·СѓРµС‚СЃВ¤ РїСЂРµСЂС‹РІР°РЅРёРµ С‚Р°Р№РјРµСЂР° 0 РїРѕ РєР°РЅР°Р»Сѓ С, РєРѕС‚РѕСЂРѕРµ РѕР±СЃР»СѓР¶РёРІР°РµС‚ СЌРЅРєРѕРґРµСЂ Рё РєРЅРѕРїРєСѓ
+//заводим любой таймер, настраиваем на нужную частоту прерываний и взводим флаг обновления данных в прерывании
+//конкретно здесь используется прерывание таймера 0 по каналу А, которое обслуживает энкодер и кнопку
 void update_bme280(void){
 	char string[20];
 	if(update_bme280_flag){
@@ -265,19 +265,19 @@ void update_bme280(void){
 
 
 
-/*В¬ РґР°Р»СЊРЅРµР№С€РµРј РґР»В¤ СЃР±РѕСЂР° РґР°РЅРЅС‹С…, РЅРѕ СЌС‚Рѕ РЅРµ С‚РѕС‡РЅРѕ*/
+/*В дальнейшем для сбора данных, но это не точно*/
 void init_stack(stack *stack, uint32_t capacity) {
-  stack->capacity = capacity;                                                                                             // Р·Р°РЅРѕСЃРёРј РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ С‚РёРїР° record РІ СЃС‚РµРєРµ
+  stack->capacity = capacity;                                                                                             // заносим количество элементов типа record в стеке
   if (capacity < 1) {
    // clear_display();
    // char *message="Stack capacity must be at least 1";
    // draw_string(0,0,message,-1,BACKGROUND_COLOR,RED,TinyFont);
     return;
   }
-  stack->size = 0;                                                                                                        // Р·Р°РЅРѕСЃРёРј С‚РµРєСѓС‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃС‚РµРєРµ
-  stack->measure = (datatype *)malloc(capacity * sizeof(datatype));                                                       // РІ СѓРєР°Р·Р°С‚РµР»СЊ СЃС‚РµРєР° Р·Р°РЅРѕСЃРёРј Р°РґСЂРµСЃ РїР°РјВ¤С‚Рё, РІС‹РґРµР»РµРЅРЅРѕР№ РїРѕРґ РјР°СЃСЃРёРІ record
+  stack->size = 0;                                                                                                        // заносим текущее количество элементов в стеке
+  stack->measure = (datatype *)malloc(capacity * sizeof(datatype));                                                       // в указатель стека заносим адрес памяти, выделенной под массив record
                                     
-  if (stack->measure ==NULL) {                                                                                            // РµСЃР»Рё malloc РІРµСЂРЅСѓР» NULL, Р·РЅР°С‡РёС‚ РїР°РјВ¤С‚СЊ РЅРµ РІС‹РґРµР»РµРЅР°
+  if (stack->measure ==NULL) {                                                                                            // если malloc вернул NULL, значит память не выделена
     //clear_display();
     //char *message="Memory allocation failed for stack";
    // draw_string(0,0,message,-1,BACKGROUND_COLOR,RED,TinyFont);
@@ -287,18 +287,18 @@ void init_stack(stack *stack, uint32_t capacity) {
 
 void free_stack(stack *stack) {
   if (stack->measure) {
-    free(stack->measure);                                                                                                 // РѕСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјВ¤С‚СЊ, РІС‹РґРµР»РµРЅРЅСѓСЋ РїРѕРґ РјР°СЃСЃРёРІ record
-    stack->measure = NULL;                                                                                                // РѕР±РЅСѓР»В¤РµРј СѓРєР°Р·Р°С‚РµР»СЊ
+    free(stack->measure);                                                                                                 // освобождаем память, выделенную под массив record
+    stack->measure = NULL;                                                                                                // обнуляем указатель
   }
-  stack->capacity = 0;                                                                                                    // РѕР±РЅСѓР»В¤РµРј СЂР°Р·РјРµСЂ СЃС‚РµРєР°
-  stack->size = 0;                                                                                                        // РѕР±РЅСѓР»В¤РµРј С‚РµРєСѓС‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃС‚РµРєРµ
+  stack->capacity = 0;                                                                                                    // обнуляем размер стека
+  stack->size = 0;                                                                                                        // обнуляем текущее количество элементов в стеке
 }
 
 void push_data(stack *stack, datatype *data) {
-  if (stack->size == stack->capacity - 1) {                                                                               // РµСЃР»Рё СЂР°Р·РјРµСЂ СЃС‚РµРєР° СЂР°РІРµРЅ РµРіРѕ РІРјРµСЃС‚РёРјРѕСЃС‚Рё, СѓРІРµР»РёС‡РёРІР°РµРј СЂР°Р·РјРµСЂ СЃС‚РµРєР°
-    stack->capacity *= 2;                                                                                                 // СѓРІРµР»РёС‡РёРІР°РµРј СЂР°Р·РјРµСЂ СЃС‚РµРєР° РІ 2 СЂР°Р·Р°
-    stack->measure = (datatype *)realloc(stack->measure, stack->capacity * sizeof(datatype));                             // РїРѕР»СѓС‡Р°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СѓРІРµР»РёС‡РµРЅРЅС‹Р№ РІ 2 СЂР°Р·Р° СѓС‡Р°СЃС‚РѕРє РїР°РјВ¤С‚Рё
-    if (stack->measure ==NULL) {                                                                                          // РµСЃР»Рё realloc РІРµСЂРЅСѓР» NULL, Р·РЅР°С‡РёС‚ РїР°РјВ¤С‚СЊ РЅРµ РІС‹РґРµР»РµРЅР°
+  if (stack->size == stack->capacity - 1) {                                                                               // если размер стека равен его вместимости, увеличиваем размер стека
+    stack->capacity *= 2;                                                                                                 // увеличиваем размер стека в 2 раза
+    stack->measure = (datatype *)realloc(stack->measure, stack->capacity * sizeof(datatype));                             // получаем указатель на увеличенный в 2 раза участок памяти
+    if (stack->measure ==NULL) {                                                                                          // если realloc вернул NULL, значит память не выделена
       //clear_display();
       //char *message="Memory allocation failed for stack";
       //draw_string(0,0,message,-1,BACKGROUND_COLOR,RED,TinyFont);
@@ -306,16 +306,16 @@ void push_data(stack *stack, datatype *data) {
       return;
     }
   }
-  stack->measure[stack->size++] = *data;                                                                                  // РґРѕР±Р°РІР»В¤РµРј СЌР»РµРјРµРЅС‚ РІ СЃС‚РµРє Рё СѓРІРµР»РёС‡РёРІР°РµРј СЂР°Р·РјРµСЂ СЃС‚РµРєР°
+  stack->measure[stack->size++] = *data;                                                                                  // добавляем элемент в стек и увеличиваем размер стека
 }
 
 uint8_t is_stack_empty(stack *st) {
-  return (st->size == 0);                                                                                                 // РІРѕР·РІСЂР°С‰Р°РµРј 1, РµСЃР»Рё СЃС‚РµРє РїСѓСЃС‚, РёРЅР°С‡Рµ 0
+  return (st->size == 0);                                                                                                 // возвращаем 1, если стек пуст, иначе 0
 }
 
 void pop_data(stack *st, datatype *data) {
-  if (!is_stack_empty(st)) {                                                                                              // РµСЃР»Рё РІ СЃС‚РµРєРµ РµСЃС‚СЊ СЌР»РµРјРµРЅС‚С‹
-    *data = st->measure[--st->size];                                                                                      // СѓРјРµРЅСЊС€Р°РµРј СЂР°Р·РјРµСЂ СЃС‚РµРєР° Рё РІРѕР·РІСЂР°С‰Р°РµРј  РїРѕСЃР»РµРґРЅРёР№ СЌР»РµРјРµРЅС‚
+  if (!is_stack_empty(st)) {                                                                                              // если в стеке есть элементы
+    *data = st->measure[--st->size];                                                                                      // уменьшаем размер стека и возвращаем  последний элемент
   } else {
     //clear_display();
     //char *message="Stack is empty, cannot pop data";
@@ -333,9 +333,9 @@ uint8_t read_data(stack *st,uint16_t num_measurements) {
     is_stack_init=1;
   }
   if(st->capacity<=num_measurements){
-    datatype add = {press,hum, temp};                                                                                       //РІРЅРѕСЃРёРј РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ record СЃС‡РёС‚Р°РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ
+    datatype add = {press,hum, temp};                                                                                       //вносим в структуру record считанные данные
     add_record(&add);
-    push_data(st, &add);                                                                                                    //РґРѕР±Р°РІР»В¤РµРј РґР°РЅРЅС‹Рµ РІ СЃС‚РµРє
+    push_data(st, &add);                                                                                                    //добавляем данные в стек
   
   }else{
    free_stack(st);
