@@ -13,6 +13,7 @@
 #include "PWM.h"
 #include "mpu6050.h"
 #include "menu.h"
+#include "eeprom.h"
 
 #define MENU_PROCESS			0xFF
 

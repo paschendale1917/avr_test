@@ -1,5 +1,7 @@
 ﻿#include "PWM.h"
 
+uint8_t backlight_cell =30;
+
 void tim1A_init(void){
 	WRITE_REG(TCNT1,0);
 	WRITE_REG(ICR1,FREQ_VALUE);

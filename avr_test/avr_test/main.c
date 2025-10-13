@@ -7,11 +7,12 @@
 #define F_CPU 16000000UL
 #include "main.h"
 
-
-
 int main(void){
 	hardware_init();
 	sei();
+	//EEPROM_write_byte(BACKLIGHT_CELL,35);
+	pwm_value=EEPROM_read_byte(BACKLIGHT_CELL);
+	pwm1A_start(pwm_value);
 	//print_string("HELLO WORLD\r\n");
 	//print_bme280_coef();
   	//i2c_scanner(scanned_addr);

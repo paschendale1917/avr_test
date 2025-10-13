@@ -98,18 +98,18 @@ void clear_current_menu(uint8_t xstart, uint8_t ystart) {
 
 //выход в меню более высокого уровня из дочернего меню
 void enter_upmenu(void) {
-	clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
-	if(current_menu->parent != NULL||current_menu->action!=NULL) {
-		current_menu = current_menu->parent;
-		pointer_clear_flag = 1;
-		display_current_menu(X_MENU_OFFSET, Y_MENU_OFFSET);
+	if(current_menu->parent != NULL||current_menu->action!=NULL) {					//если есть родительский пункт меню или обрабочик пункта меню
+		clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);							//стираем меню
+		current_menu = current_menu->parent;										//загружаем указатель на родительский пункт меню
+		pointer_clear_flag = 1;														//выставляет флаг необходимости отрисовать указатель
+		display_current_menu(X_MENU_OFFSET, Y_MENU_OFFSET);							//отрисовываем меню и указатель
 	}
 }
 
 //вход в дочернее меню
 void enter_submenu(void) {
-	clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
 	if(current_menu->child != NULL) {
+		clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
 		current_menu = current_menu->child;
 		pointer_clear_flag = 1;
 		display_current_menu(X_MENU_OFFSET, Y_MENU_OFFSET);

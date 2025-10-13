@@ -44,6 +44,7 @@ C_SRCS +=  \
 ../DotMatrix_L_Num.c \
 ../DotMatrix_M_Slash.c \
 ../DotMatrix_XL_Num.c \
+../eeprom.c \
 ../encoder.c \
 ../Grotesk16x32.c \
 ../GroteskBold16x32_DK_NO.c \
@@ -73,6 +74,7 @@ bme280.o \
 DotMatrix_L_Num.o \
 DotMatrix_M_Slash.o \
 DotMatrix_XL_Num.o \
+eeprom.o \
 encoder.o \
 Grotesk16x32.o \
 GroteskBold16x32_DK_NO.o \
@@ -95,6 +97,7 @@ bme280.o \
 DotMatrix_L_Num.o \
 DotMatrix_M_Slash.o \
 DotMatrix_XL_Num.o \
+eeprom.o \
 encoder.o \
 Grotesk16x32.o \
 GroteskBold16x32_DK_NO.o \
@@ -117,6 +120,7 @@ bme280.d \
 DotMatrix_L_Num.d \
 DotMatrix_M_Slash.d \
 DotMatrix_XL_Num.d \
+eeprom.d \
 encoder.d \
 Grotesk16x32.d \
 GroteskBold16x32_DK_NO.d \
@@ -139,6 +143,7 @@ bme280.d \
 DotMatrix_L_Num.d \
 DotMatrix_M_Slash.d \
 DotMatrix_XL_Num.d \
+eeprom.d \
 encoder.d \
 Grotesk16x32.d \
 GroteskBold16x32_DK_NO.d \
@@ -210,6 +215,13 @@ LINKER_SCRIPT_DEP+=
 	
 
 ./DotMatrix_XL_Num.o: .././DotMatrix_XL_Num.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -O2 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./eeprom.o: .././eeprom.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -O2 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

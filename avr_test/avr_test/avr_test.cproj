@@ -162,6 +162,12 @@
     <Compile Include="DotMatrix_XL_Num.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="eeprom.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="eeprom.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="encoder.c">
       <SubType>compile</SubType>
     </Compile>

@@ -16,6 +16,7 @@
 #define RESET_COM_A			0xC0
 #define RESET_COM_B         0x30  
 #define RESET_DIVIDER       0x07
+#define BACKLIGHT_CELL      30
 
 
 void tim1A_init(void);

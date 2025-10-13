@@ -17,6 +17,7 @@ void hardware_init(void){
 	tim1A_init();				 //таймер, отвечающий за подстветку. самый "жирный" на этом мк. взял его, чтобы поиграться с частотой и скважностью
 	pwm1A_start(50);
 	mpu6050_init();
+	
 }
 
 void test_handler(void){
@@ -64,6 +65,7 @@ void menu_process(void){
 					//enc--;
 					menu_navigate_prev(); //если поворот влево, то в указатель пункта меню пишем адрес структуры, описывающей предыдущий пункт меню
 					pointer_clear_flag=1; //флаг используется для того, чтобы указатель перерисовывался не постоянно, тратя ресурсы мк, а только тогда, когда происходит поворот ручки энкодера
+					clear_display_flag=1;
 					resetButton();
 					break ;
 				
@@ -72,6 +74,7 @@ void menu_process(void){
 					//enc++;
 					menu_navigate_next();
 					pointer_clear_flag=1;
+					clear_display_flag=1;
 					resetButton();
 					break ;
 				
@@ -105,6 +108,7 @@ void return_from_handler(void){
 	clear_display();													//очищаем дисплей от экрана обработчика
 	display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);					//выводим текущее меню
 	draw_pointer(current_menu);											//отрисовываем указатель заново
+	clear_display_flag=1;												//установка флага требующейся очистки дисплея от меню необходима для того, чтобы было возможно вторичное вхождение в обработчик без проблем с очисткой экрана
 	resetButton();														//обязательно сбросить флаг нажатой кнопки, иначе он будет висеть и кнопка окажется недееспособной
 }
 
@@ -122,10 +126,15 @@ void main_screen_handler(void){
 
 void backlight_handler(void){
 	menustate=2;
+	if(clear_display_flag){													//очистить нужно единожды, поэтому был введен флаг очистки дисплея
+		clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
+		clear_display_flag=0;
+	}
 	char buf[20]="";
 	sprintf(buf,"%u%%",pwm_value);
 	switch(readButtonState()){
 		case BUTTON_MENUITEMBACK:
+			EEPROM_write_byte(BACKLIGHT_CELL,pwm_value);
 			return_from_handler();
 			break ;
 		case ENC_LEFT:
@@ -156,11 +165,10 @@ void ADC_handler(void){
 
 void about_handler(void){
 	menustate=3;
-	//resetButton();
-	/*if(clear_display_flag){													//очистить нужно единожды, поэтому был введен флаг очистки дисплея                           
-		clear_display();
+	if(clear_display_flag){													//очистить нужно единожды, поэтому был введен флаг очистки дисплея                           
+		clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
 		clear_display_flag=0;
-	}*/
+	}
 	draw_string(0,0,"Bryansk 2025",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
 	if(readButtonState()==BUTTON_MENUITEMBACK){								//в обработчике ожидаем нжатие кнопки возврата, если оно происходит, то
 		return_from_handler();												//вызываем функцию возврата к меню

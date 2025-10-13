@@ -14,20 +14,6 @@
 #define ENCODER_PORT        PORTD
 #define ENCODER_PIN         PIND
 
-#define LED1_DDR            DDRD
-#define LED1_PORT           PORTD
-#define LED1_PIN			PIND
-#define LED1_ON             LED1_PORT|=(1<<LED1)
-#define LED1_OFF            LED1_PORT&=~(1<<LED1)
-#define LED1_TOGGLE         LED1_PORT^=(1<<LED1)
-
-#define LED0_DDR            DDRD
-#define LED0_PORT           PORTD
-#define LED0_PIN			PIND
-#define LED0_ON             LED0_PORT|=(1<<LED0)
-#define LED0_OFF            LED0_PORT&=~(1<<LED0)
-#define LED0_TOGGLE         LED0_PORT^=(1<<LED0)
-
 #define BUTTON_DDR          DDRD
 #define BUTTON_PORT         PORTD
 #define BUTTON_PIN		    PIND
@@ -39,8 +25,6 @@
 
 #define LONG_TIMEOUT       100
 
-#define PRESSED 		   1
-#define UNPRESSED		   0
 
 typedef  enum
 {
