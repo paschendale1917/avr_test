@@ -9,3 +9,7 @@
 *.lst
 *.d
 *.bak
+*.srec
+*.lss
+*.mk
+*.eep
