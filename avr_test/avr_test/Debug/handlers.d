@@ -1,4 +1,4 @@
-main.d main.o: .././main.c .././main.h .././handlers.h \
+handlers.d handlers.o: .././handlers.c .././handlers.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint.h \
@@ -24,8 +24,6 @@ main.d main.o: .././main.c .././main.h .././handlers.h \
  .././spi.h .././uart.h .././bme280.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h \
  .././i2c.h .././PWM.h .././mpu6050.h .././menu.h
-
-.././main.h:
 
 .././handlers.h:
 

@@ -11,7 +11,7 @@ uint8_t start_cond(void){
 	SET_BIT(TWCR,(1<<TWINT)|(1<<TWSTA)|(1<<TWEN));									//условие старта
 	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
 		//	 while_delay=adc_conv;
-		//	if(adc_conv-while_delay>30) return START_ERROR;                             //если во время ожидания превышено время, то выходим из функции(чтобы не висло)
+		//	if(adc_conv-while_delay>30) return START_ERROR;                         //если во время ожидания превышено время, то выходим из функции(чтобы не висло)
 	};
 	status=TWSR&0xF8;
 	if ((status == 0x08)|(status == 0x10))											//проверка битов старта или рестарта регистра статуса TWSR
@@ -29,7 +29,7 @@ uint8_t i2c_sendbyte(uint8_t byte){
 		//	if(adc_conv-while_delay>30) return SEND_ERROR;
 	};
 	uint8_t status = TWSR & 0xF8;													// Считывание кода статуса
-	if ((status == 0x18) | (status == 0x28) | (status == 0x40))						// Проверка кода статуса (передача SLA+W, пакета данных, SLA+R)
+	if ((status == 0x18) | (status == 0x28) | (status == 0x40))						// проверка кода статуса (передача SLA+W, пакета данных, SLA+R)
 	return ACK;
 	else
 	return NACK;
@@ -47,7 +47,7 @@ uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status определяет, ч
 	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN));										//снюхиваем байт и передаем NACK(если забирая последний байт у слева не сказать ему NACK, то он продолжит удерживать линию и дальнейшая работа с шиной станет невозможна)
 	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
 		//	while_delay=adc_conv;
-		//	if(adc_conv-while_delay>30) return SEND_ERROR;                              //если во время ожидания превышено время, то выходим из функции
+		//	if(adc_conv-while_delay>30) return SEND_ERROR;                          //если во время ожидания превышено время, то выходим из функции
 	};
 	return TWDR;
 }
@@ -58,7 +58,7 @@ void i2c_scanner(uint8_t *scans){
 		start_cond();
 		uint8_t answ=i2c_sendbyte(i);
 		if(answ==ACK){
-			i2c_readbyte(NACK);                        //слейву необходимо отправить NACK, чтобы он не держал линию
+			i2c_readbyte(NACK);														//слейву необходимо отправить NACK, чтобы он не держал линию
 			stop_cond();
 			scans[cntr++]=i;
 			print_hexnumber(i);

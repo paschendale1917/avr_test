@@ -57,9 +57,9 @@ uint8_t bme280_readdata(uint8_t dev_addr, uint8_t reg,uint8_t *data,uint8_t num_
 	if(status!=ACK)return ERROR;
 	   for (uint8_t cntr = 0; cntr < num_bytes; cntr++) {
 		   if (cntr < num_bytes - 1) {
-			   *(data+cntr) = i2c_readbyte(ACK);								// Îòïğàâëÿåì ACK äëÿ âñåõ, êğîìå ïîñëåäíåãî áàéòà
+			   *(data+cntr) = i2c_readbyte(ACK);								// îòïğàâëÿåì ACK äëÿ âñåõ, êğîìå ïîñëåäíåãî áàéòà
 			   } else {
-			   *(data+cntr)= i2c_readbyte(NACK);								// Îòïğàâëÿåì NACK äëÿ ïîñëåäíåãî áàéòà
+			   *(data+cntr)= i2c_readbyte(NACK);								// îòïğàâëÿåì NACK äëÿ ïîñëåäíåãî áàéòà
 		   }
 	   }																		
 	 stop_cond();
@@ -125,7 +125,7 @@ uint8_t get_compens(compensation *dt){
   return SUCCESS;
 }
 
-
+//äëÿ îòëàäêè
 void print_bme280_coef(void){
 	char str1[250];
 	sprintf(str1, "DIG_T1: %u\r\n", comp_bme280.dig_T1);
@@ -165,6 +165,8 @@ void print_bme280_coef(void){
 	sprintf(str1, "DIG_H6: %d\r\n", comp_bme280.dig_H6);
 	print_string(str1);
 }
+
+//ÔÎĞÌÓËÛ ÂÇßÒÛ ÈÇ ÄÀÒÀØÈÒÀ
 
 // Returns temperature in DegC, resolution is 0.01 DegC. Output value of “5123” equals 51.23 DegC.
 // t_fine carries fine temperature as global value

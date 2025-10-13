@@ -18,6 +18,8 @@ DotMatrix_XL_Num.c
 
 encoder.c
 
+handlers.c
+
 i2c.c
 
 main.c

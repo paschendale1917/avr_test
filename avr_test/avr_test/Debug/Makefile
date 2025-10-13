@@ -45,6 +45,7 @@ C_SRCS +=  \
 ../DotMatrix_M_Slash.c \
 ../DotMatrix_XL_Num.c \
 ../encoder.c \
+../handlers.c \
 ../i2c.c \
 ../main.c \
 ../menu.c \
@@ -71,6 +72,7 @@ DotMatrix_L_Num.o \
 DotMatrix_M_Slash.o \
 DotMatrix_XL_Num.o \
 encoder.o \
+handlers.o \
 i2c.o \
 main.o \
 menu.o \
@@ -90,6 +92,7 @@ DotMatrix_L_Num.o \
 DotMatrix_M_Slash.o \
 DotMatrix_XL_Num.o \
 encoder.o \
+handlers.o \
 i2c.o \
 main.o \
 menu.o \
@@ -109,6 +112,7 @@ DotMatrix_L_Num.d \
 DotMatrix_M_Slash.d \
 DotMatrix_XL_Num.d \
 encoder.d \
+handlers.d \
 i2c.d \
 main.d \
 menu.d \
@@ -128,6 +132,7 @@ DotMatrix_L_Num.d \
 DotMatrix_M_Slash.d \
 DotMatrix_XL_Num.d \
 encoder.d \
+handlers.d \
 i2c.d \
 main.d \
 menu.d \
@@ -202,6 +207,13 @@ LINKER_SCRIPT_DEP+=
 	
 
 ./encoder.o: .././encoder.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -O2 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./handlers.o: .././handlers.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -O2 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

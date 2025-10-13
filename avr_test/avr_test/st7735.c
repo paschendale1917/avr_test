@@ -271,8 +271,7 @@ void draw_clocks(uint16_t xpos,  uint16_t ypos, int32_t number, uint8_t space, u
 	draw_number(xpos, ypos, number / 100 % 10, space, bcolor, fcolor, font);
 }
 
-void draw_minutes(uint16_t xpos,  uint16_t ypos, int32_t number, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font)
-{
+void draw_minutes(uint16_t xpos,  uint16_t ypos, int32_t number, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font){
 	draw_number(xpos + font[0] + space, ypos, number % 10, space, bcolor, fcolor, font);
 	draw_number(xpos, ypos, number / 10 % 10, space, bcolor, fcolor, font);
 
