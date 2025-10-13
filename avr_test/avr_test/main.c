@@ -21,7 +21,6 @@ int main(void){
 		
 		switch(menustate){
 			case 0:
-				//clear_display_flag=1;
 				//main_screen_handler();	
 				break;
 			case  1:
@@ -31,7 +30,6 @@ int main(void){
 				backlight_handler();
 				break;
 			case 3:
-				//clear_display_flag=1;
 				about_handler();
 				break;
 			default:
