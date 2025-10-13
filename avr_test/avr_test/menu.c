@@ -1,5 +1,4 @@
-﻿//разлохматил бабушку до неузнаваемости:-D
-#include "menu.h"
+﻿#include "menu.h"
 
 volatile char string[100];
 uint8_t pwm_value=50;

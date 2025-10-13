@@ -142,8 +142,7 @@ void backlight_handler(void){
 			pwm1A_start(pwm_value);	
 			pwm_value>100?pwm_value=100:0;
 			draw_string(15,0,"BACKLIGHT",-3,BACKGROUND_COLOR,RED,BigFont);
-			//draw_number(30,20,pwm_value,0,BACKGROUND_COLOR,WHITE,Grotesk16x32);
-			draw_string(45,20,buf,0,BACKGROUND_COLOR,RED,Grotesk16x32);
+			draw_string(50,20,buf,0,BACKGROUND_COLOR,RED,Grotesk16x32);
 			break ;
 		}
 	
