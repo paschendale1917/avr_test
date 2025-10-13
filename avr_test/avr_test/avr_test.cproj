@@ -171,6 +171,12 @@
     <Compile Include="fonts.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Grotesk16x32.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="GroteskBold16x32_DK_NO.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="handlers.c">
       <SubType>compile</SubType>
     </Compile>

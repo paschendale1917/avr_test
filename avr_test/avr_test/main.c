@@ -28,7 +28,7 @@ int main(void){
 			   // ADC_handler();
 				break;
 			case 2:
-				//backlight_handler();
+				backlight_handler();
 				break;
 			case 3:
 				//clear_display_flag=1;

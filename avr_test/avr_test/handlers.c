@@ -100,6 +100,14 @@ void menu_process(void){
 	}
 }
 
+void return_from_handler(void){
+	menustate=MENU_PROCESS;												//пишем в переменную статуса меню любое значение, которое не отслеживает switch  в бесконечном цикле
+	clear_display();													//очищаем дисплей от экрана обработчика
+	display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);					//выводим текущее меню
+	draw_pointer(current_menu);											//отрисовываем указатель заново
+	resetButton();														//обязательно сбросить флаг нажатой кнопки, иначе он будет висеть и кнопка окажется недееспособной
+}
+
 void main_screen_handler(void){
 	menustate=0;
 	if(clear_display_flag){
@@ -107,9 +115,37 @@ void main_screen_handler(void){
 		clear_display_flag=0;
 	}
 	update_bme280();
+	if(readButtonState()==BUTTON_MENUITEMBACK){								//в обработчике ожидаем нжатие кнопки возврата, если оно происходит, то
+		return_from_handler();												//вызываем функцию возврата к меню
+	}
 }
 
 void backlight_handler(void){
+	menustate=2;
+	char buf[20]="";
+	sprintf(buf,"%u%%",pwm_value);
+	switch(readButtonState()){
+		case BUTTON_MENUITEMBACK:
+			return_from_handler();
+			break ;
+		case ENC_LEFT:
+			pwm_value--;
+			resetButton();
+			break ;
+				
+		case ENC_RIGHT:
+			pwm_value++;
+			resetButton();
+			break ;
+				
+		default:
+			pwm1A_start(pwm_value);	
+			pwm_value>100?pwm_value=100:0;
+			draw_string(15,0,"BACKLIGHT",-3,BACKGROUND_COLOR,RED,BigFont);
+			//draw_number(30,20,pwm_value,0,BACKGROUND_COLOR,WHITE,Grotesk16x32);
+			draw_string(45,20,buf,0,BACKGROUND_COLOR,RED,Grotesk16x32);
+			break ;
+		}
 	
 }
 
@@ -118,13 +154,6 @@ void ADC_handler(void){
 }
 
 
-void return_from_handler(void){
-	menustate=MENU_PROCESS;												//пишем в переменную статуса меню любое значение, которое не отслеживает switch  в бесконечном цикле
-	clear_display();													//очищаем дисплей от экрана обработчика
-	display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);					//выводим текущее меню
-	draw_pointer(current_menu);											//отрисовываем указатель заново
-	resetButton();														//обязательно сбросить флаг нажатой кнопки, иначе он будет висеть и кнопка окажется недееспособной
-}
 
 void about_handler(void){
 	menustate=3;
