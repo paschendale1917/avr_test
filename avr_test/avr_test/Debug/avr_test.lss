@@ -2609,7 +2609,7 @@ void spi_master_init(void){
     1376:	8c b5       	in	r24, 0x2c	; 44
     1378:	8c 7f       	andi	r24, 0xFC	; 252
     137a:	8c bd       	out	0x2c, r24	; 44
-	SET_BIT(SPSR,1<<SPI2X);      // fck/2  16000000/2=8ÌÃö
+	SET_BIT(SPSR,1<<SPI2X);      // fck/2  16000000/2=8ÌÃö(áðåõíÿ, 4 ìãö ìàêñèìóì)
     137c:	8d b5       	in	r24, 0x2d	; 45
     137e:	81 60       	ori	r24, 0x01	; 1
     1380:	8d bd       	out	0x2d, r24	; 45
@@ -2620,8 +2620,7 @@ void spi_master_init(void){
     1388:	08 95       	ret
 
 0000138a <spi_sendbyte>:
-	
-}
+	}
 
 void spi_sendbyte(uint8_t byte){
 	SPDR = byte;
