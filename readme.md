@@ -3,7 +3,7 @@
 - **Микроконтроллер:** ATmega328P 
 - **IDE:** Microchip Studio (Atmel Studio) 7
 - **Язык:** C (Embedded)
-- **Дисплей:** LCD ST7735 80_160
+- **Дисплей:** LCD ST7735 80*160
 - **Датчики:** BME280, MPU6050
 - **Управление:** Энкодер + кнопка
 - **AVR Programmer:** (USBasp, AVRISP mkII)
