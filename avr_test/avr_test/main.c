@@ -12,7 +12,7 @@ int main(void){
 	sei();
 	//print_string("HELLO WORLD\r\n");
 	//print_bme280_coef();
-  	//i2c_scanner(scanned_addr);
+  	i2c_scanner(scanned_addr);
 	menu_init(&main_menu_item_1);                                                       //инициализируем меню и устанавливаем указатель на первый пункт
 	display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);                                  //отрисовываем начальное меню
     while (1) {
