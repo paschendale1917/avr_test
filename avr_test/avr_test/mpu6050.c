@@ -58,9 +58,9 @@ uint8_t mpu6050_readdata(uint8_t dev_addr, uint8_t reg,uint8_t *data,uint8_t num
 	if(status!=ACK)return ERROR;
 	for (uint8_t cntr = 0; cntr < num_bytes; cntr++) {
 		if (cntr < num_bytes - 1) {
-			*(data+cntr) = i2c_readbyte(ACK);								// Îòïğàâëÿåì ACK äëÿ âñåõ, êğîìå ïîñëåäíåãî áàéòà
+			*(data+cntr) = i2c_readbyte(ACK);								// ĞÑ‚Ğ¿Ñ€Ğ°Ğ²Ğ»ÑĞµĞ¼ ACK Ğ´Ğ»Ñ Ğ²ÑĞµÑ…, ĞºÑ€Ğ¾Ğ¼Ğµ Ğ¿Ğ¾ÑĞ»ĞµĞ´Ğ½ĞµĞ³Ğ¾ Ğ±Ğ°Ğ¹Ñ‚Ğ°
 			} else {
-			*(data+cntr)= i2c_readbyte(NACK);								// Îòïğàâëÿåì NACK äëÿ ïîñëåäíåãî áàéòà
+			*(data+cntr)= i2c_readbyte(NACK);								// ĞÑ‚Ğ¿Ñ€Ğ°Ğ²Ğ»ÑĞµĞ¼ NACK Ğ´Ğ»Ñ Ğ¿Ğ¾ÑĞ»ĞµĞ´Ğ½ĞµĞ³Ğ¾ Ğ±Ğ°Ğ¹Ñ‚Ğ°
 		}
 	}
 	stop_cond();

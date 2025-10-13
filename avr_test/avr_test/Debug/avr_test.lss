@@ -259,7 +259,7 @@ ISR(ADC_vect){
      53a:	18 95       	reti
 
 0000053c <bme280_send_data>:
- //читаем порцию данных с датчика
+ //С‡РёС‚Р°РµРј РїРѕСЂС†РёСЋ РґР°РЅРЅС‹С… СЃ РґР°С‚С‡РёРєР°
 uint8_t read_raw_data_bme280(uint8_t start_addr, uint8_t *data,  uint8_t num_bytes){
  // if(read_byte_i2c(BME280_ADDR, ID) != 0x60) { return ERROR; }
  bme280_readdata(BME280_ADDR, start_addr, data, num_bytes);
@@ -408,14 +408,14 @@ uint8_t read_raw_data_bme280(uint8_t start_addr, uint8_t *data,  uint8_t num_byt
 00000670 <get_compens>:
 
 
-//запись в структуру компенсационных констант, считанных с датчика
+//Р·Р°РїРёСЃСЊ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ РєРѕРјРїРµРЅСЃР°С†РёРѕРЅРЅС‹С… РєРѕРЅСЃС‚Р°РЅС‚, СЃС‡РёС‚Р°РЅРЅС‹С… СЃ РґР°С‚С‡РёРєР°
 uint8_t get_compens(compensation *dt){
      670:	cf 93       	push	r28
      672:	df 93       	push	r29
      674:	ec 01       	movw	r28, r24
   bme280_send_data(BME280_ADDR, reset, 2);
 }
- //читаем порцию данных с датчика
+ //С‡РёС‚Р°РµРј РїРѕСЂС†РёСЋ РґР°РЅРЅС‹С… СЃ РґР°С‚С‡РёРєР°
 uint8_t read_raw_data_bme280(uint8_t start_addr, uint8_t *data,  uint8_t num_bytes){
  // if(read_byte_i2c(BME280_ADDR, ID) != 0x60) { return ERROR; }
  bme280_readdata(BME280_ADDR, start_addr, data, num_bytes);
@@ -433,7 +433,7 @@ uint8_t read_raw_data_bme280(uint8_t start_addr, uint8_t *data,  uint8_t num_byt
      68e:	0e 94 e1 02 	call	0x5c2	; 0x5c2 <bme280_readdata>
      692:	e9 e5       	ldi	r30, 0x59	; 89
      694:	f4 e0       	ldi	r31, 0x04	; 4
-//запись в структуру компенсационных констант, считанных с датчика
+//Р·Р°РїРёСЃСЊ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ РєРѕРјРїРµРЅСЃР°С†РёРѕРЅРЅС‹С… РєРѕРЅСЃС‚Р°РЅС‚, СЃС‡РёС‚Р°РЅРЅС‹С… СЃ РґР°С‚С‡РёРєР°
 uint8_t get_compens(compensation *dt){
   static uint8_t comp_data[NUM_COMP_BYTES_1 + NUM_COMP_BYTES_2] = {0};
   read_raw_data_bme280(START_COMP_ADDR_1, comp_data, NUM_COMP_BYTES_1);
@@ -546,7 +546,7 @@ uint8_t get_compens(compensation *dt){
 	 return SUCCESS;
 }
 
-//Передача данных: адрес регистра, затем байт настроек. Можно писать сразу во все регистры
+//С•РµСЂРµРґР°С‡Р° РґР°РЅРЅС‹С…: Р°РґСЂРµСЃ СЂРµРіРёСЃС‚СЂР°, Р·Р°С‚РµРј Р±Р°Р№С‚ РЅР°СЃС‚СЂРѕРµРє. С›РѕР¶РЅРѕ РїРёСЃР°С‚СЊ СЃСЂР°Р·Сѓ РІРѕ РІСЃРµ СЂРµРіРёСЃС‚СЂС‹
 uint8_t bme280_init(uint8_t hum_oversampling, uint8_t filter, uint8_t standby, uint8_t press_oversampling, uint8_t temp_oversampling, uint8_t mode)
 {
      73c:	ef 92       	push	r14
@@ -562,7 +562,7 @@ uint8_t bme280_init(uint8_t hum_oversampling, uint8_t filter, uint8_t standby, u
      750:	de bf       	out	0x3e, r29	; 62
      752:	0f be       	out	0x3f, r0	; 63
      754:	cd bf       	out	0x3d, r28	; 61
-  uint8_t  settings[6] = {CONTROL_HUM,                                                                       //адрес регистра настроек измерения влажности
+  uint8_t  settings[6] = {CONTROL_HUM,                                                                       //Р°РґСЂРµСЃ СЂРµРіРёСЃС‚СЂР° РЅР°СЃС‚СЂРѕРµРє РёР·РјРµСЂРµРЅРёВ¤ РІР»Р°Р¶РЅРѕСЃС‚Рё
      756:	92 ef       	ldi	r25, 0xF2	; 242
      758:	99 83       	std	Y+1, r25	; 0x01
      75a:	8a 83       	std	Y+2, r24	; 0x02
@@ -656,15 +656,15 @@ void bme280_reset(void)
 
 000007dc <enc_ports_init>:
 volatile uint8_t	adc_conv=0;  
-volatile uint8_t	update_bme280_flag=0;                                                           //переменная, которую будем юзать для всяких отсчетов
+volatile uint8_t	update_bme280_flag=0;                                                           //РїРµСЂРµРјРµРЅРЅР°СЏ, РєРѕС‚РѕСЂСѓСЋ Р±СѓРґРµРј СЋР·Р°С‚СЊ РґР»СЏ РІСЃСЏРєРёС… РѕС‚СЃС‡РµС‚РѕРІ
 
 
  void enc_ports_init(void){
-	 CLEAR_BIT(ENCODER_DDR,(1<<ENC_CLK)|(1<<ENC_DT)|(1<<ENC_BUTTON));								//на вход ножки энкодера и кнопка энкодера
+	 CLEAR_BIT(ENCODER_DDR,(1<<ENC_CLK)|(1<<ENC_DT)|(1<<ENC_BUTTON));								//РЅР° РІС…РѕРґ РЅРѕР¶РєРё СЌРЅРєРѕРґРµСЂР° Рё РєРЅРѕРїРєР° СЌРЅРєРѕРґРµСЂР°
      7dc:	8a b1       	in	r24, 0x0a	; 10
      7de:	83 7e       	andi	r24, 0xE3	; 227
      7e0:	8a b9       	out	0x0a, r24	; 10
-	 SET_BIT(ENCODER_PORT,(1<<ENC_BUTTON));															//подтяжка энкодера и кнопки энкодера
+	 SET_BIT(ENCODER_PORT,(1<<ENC_BUTTON));															//РїРѕРґС‚СЏР¶РєР° СЌРЅРєРѕРґРµСЂР° Рё РєРЅРѕРїРєРё СЌРЅРєРѕРґРµСЂР°
      7e2:	5c 9a       	sbi	0x0b, 4	; 11
 	 
 	 CLEAR_BIT(BUTTON_DDR,(1<<BUTTON));
@@ -676,26 +676,26 @@ volatile uint8_t	update_bme280_flag=0;                                          
 000007ea <timer0_init>:
 }
 
- /*инициализация канала А таймера 0*/
+ /*РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєР°РЅР°Р»Р° Рђ С‚Р°Р№РјРµСЂР° 0*/
  void timer0_init(){ 
 	 encoder_state|=(1<<ENC_DT)|(1<<ENC_CLK);
      7ea:	80 91 a3 04 	lds	r24, 0x04A3	; 0x8004a3 <encoder_state>
      7ee:	8c 60       	ori	r24, 0x0C	; 12
      7f0:	80 93 a3 04 	sts	0x04A3, r24	; 0x8004a3 <encoder_state>
-	 TCNT0=0;																						//на всякий случай пишем в счетный регистр 0
+	 TCNT0=0;																						//РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№ РїРёС€РµРј РІ СЃС‡РµС‚РЅС‹Р№ СЂРµРіРёСЃС‚СЂ 0
      7f4:	16 bc       	out	0x26, r1	; 38
-	 SET_BIT(TCCR0A,(1<<WGM01));																	//сброс значения в  счетном регистре при совпадении со значением в регистре сравнения 
+	 SET_BIT(TCCR0A,(1<<WGM01));																	//СЃР±СЂРѕСЃ Р·РЅР°С‡РµРЅРёСЏ РІ  СЃС‡РµС‚РЅРѕРј СЂРµРіРёСЃС‚СЂРµ РїСЂРё СЃРѕРІРїР°РґРµРЅРёРё СЃРѕ Р·РЅР°С‡РµРЅРёРµРј РІ СЂРµРіРёСЃС‚СЂРµ СЃСЂР°РІРЅРµРЅРёСЏ 
      7f6:	84 b5       	in	r24, 0x24	; 36
      7f8:	82 60       	ori	r24, 0x02	; 2
      7fa:	84 bd       	out	0x24, r24	; 36
-	 SET_BIT(TCCR0B,(1<<CS02|1<<CS00));																//делитель 1024; 16000000/1024=15625 тиков в секунду
+	 SET_BIT(TCCR0B,(1<<CS02|1<<CS00));																//РґРµР»РёС‚РµР»СЊ 1024; 16000000/1024=15625 С‚РёРєРѕРІ РІ СЃРµРєСѓРЅРґСѓ
      7fc:	85 b5       	in	r24, 0x25	; 37
      7fe:	85 60       	ori	r24, 0x05	; 5
      800:	85 bd       	out	0x25, r24	; 37
-	 OCR0A=61;																						// 15625/61=256, где 256 - частота опроса(возникновения прерывания при совпадении)
+	 OCR0A=61;																						// 15625/61=256, РіРґРµ 256 - С‡Р°СЃС‚РѕС‚Р° РѕРїСЂРѕСЃР°(РІРѕР·РЅРёРєРЅРѕРІРµРЅРёСЏ РїСЂРµСЂС‹РІР°РЅРёСЏ РїСЂРё СЃРѕРІРїР°РґРµРЅРёРё)
      802:	8d e3       	ldi	r24, 0x3D	; 61
      804:	87 bd       	out	0x27, r24	; 39
-	SET_BIT(TIMSK0,(1<<OCIE0A));																	//разрешаем прерывания при совпадении
+	SET_BIT(TIMSK0,(1<<OCIE0A));																	//СЂР°Р·СЂРµС€Р°РµРј РїСЂРµСЂС‹РІР°РЅРёСЏ РїСЂРё СЃРѕРІРїР°РґРµРЅРёРё
      806:	ee e6       	ldi	r30, 0x6E	; 110
      808:	f0 e0       	ldi	r31, 0x00	; 0
      80a:	80 81       	ld	r24, Z
@@ -714,7 +714,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
      81a:	11 24       	eor	r1, r1
      81c:	8f 93       	push	r24
      81e:	9f 93       	push	r25
-	static uint8_t count_enc_but = 0;																//счетчики
+	static uint8_t count_enc_but = 0;																//СЃС‡РµС‚С‡РёРєРё
     static uint8_t count_but = 0;
 	newState=(ENCODER_PIN&encoder_state)>>2;
      820:	99 b1       	in	r25, 0x09	; 9
@@ -762,7 +762,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
      868:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <newState>
      86c:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
 	 }
-	//обработка кнопки энкодера
+	//РѕР±СЂР°Р±РѕС‚РєР° РєРЅРѕРїРєРё СЌРЅРєРѕРґРµСЂР°
 	 if(!READ_BIT(ENCODER_PIN,(1<<ENC_BUTTON))){										
      870:	4c 9b       	sbis	0x09, 4	; 9
      872:	3c c0       	rjmp	.+120    	; 0x8ec <__vector_14+0xda>
@@ -771,7 +771,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
 		 count_enc_but++;
 		}
 	}
-	  if(count_enc_but>LONG_TIMEOUT ) {																//длинное нажатие
+	  if(count_enc_but>LONG_TIMEOUT ) {																//РґР»РёРЅРЅРѕРµ РЅР°Р¶Р°С‚РёРµ
      878:	85 36       	cpi	r24, 0x65	; 101
      87a:	e0 f5       	brcc	.+120    	; 0x8f4 <__vector_14+0xe2>
 		 if(READ_BIT(ENCODER_PIN,(1<<ENC_BUTTON))){
@@ -779,7 +779,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
 			 count_enc_but=0;
 		 }
 	  }
-	  if(count_enc_but>0 && count_enc_but<LONG_TIMEOUT) {											//короткое нажатие
+	  if(count_enc_but>0 && count_enc_but<LONG_TIMEOUT) {											//РєРѕСЂРѕС‚РєРѕРµ РЅР°Р¶Р°С‚РёРµ
      87c:	81 50       	subi	r24, 0x01	; 1
      87e:	83 36       	cpi	r24, 0x63	; 99
      880:	10 f4       	brcc	.+4      	; 0x886 <__vector_14+0x74>
@@ -790,7 +790,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
 			  count_enc_but=0;
 		  }
 	  }
-	 //обработка отдельной кнопки
+	 //РѕР±СЂР°Р±РѕС‚РєР° РѕС‚РґРµР»СЊРЅРѕР№ РєРЅРѕРїРєРё
 	 if(!READ_BIT(BUTTON_PIN,(1<<BUTTON))){												
      886:	4f 99       	sbic	0x09, 7	; 9
      888:	3e c0       	rjmp	.+124    	; 0x906 <__stack+0x7>
@@ -803,7 +803,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
      894:	80 93 9e 04 	sts	0x049E, r24	; 0x80049e <count_but.1669>
 		}
 	}
-	if(count_but>0 && count_but< LONG_TIMEOUT) {									//короткое нажатие
+	if(count_but>0 && count_but< LONG_TIMEOUT) {									//РєРѕСЂРѕС‚РєРѕРµ РЅР°Р¶Р°С‚РёРµ
      898:	9f ef       	ldi	r25, 0xFF	; 255
      89a:	98 0f       	add	r25, r24
      89c:	93 36       	cpi	r25, 0x63	; 99
@@ -847,7 +847,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
 			count_but=0;
 		}
 	}
-	if(count_but >LONG_TIMEOUT ) {													 //длинное нажатие
+	if(count_but >LONG_TIMEOUT ) {													 //РґР»РёРЅРЅРѕРµ РЅР°Р¶Р°С‚РёРµ
      8d8:	85 36       	cpi	r24, 0x65	; 101
      8da:	20 f3       	brcs	.-56     	; 0x8a4 <__vector_14+0x92>
 		if(READ_BIT(BUTTON_PIN,(1<<BUTTON))){
@@ -862,7 +862,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
 		 }
 		 oldState=newState;
 	 }
-	//обработка кнопки энкодера
+	//РѕР±СЂР°Р±РѕС‚РєР° РєРЅРѕРїРєРё СЌРЅРєРѕРґРµСЂР°
 	 if(!READ_BIT(ENCODER_PIN,(1<<ENC_BUTTON))){										
 		if(count_enc_but < 255) {
      8ec:	80 91 9f 04 	lds	r24, 0x049F	; 0x80049f <count_enc_but.1668>
@@ -871,7 +871,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
 		 count_enc_but++;
 		}
 	}
-	  if(count_enc_but>LONG_TIMEOUT ) {																//длинное нажатие
+	  if(count_enc_but>LONG_TIMEOUT ) {																//РґР»РёРЅРЅРѕРµ РЅР°Р¶Р°С‚РёРµ
 		 if(READ_BIT(ENCODER_PIN,(1<<ENC_BUTTON))){
      8f4:	4c 9b       	sbis	0x09, 4	; 9
      8f6:	0e c0       	rjmp	.+28     	; 0x914 <__stack+0x15>
@@ -884,7 +884,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
 			  count_enc_but=0;
 		  }
 	  }
-	 //обработка отдельной кнопки
+	 //РѕР±СЂР°Р±РѕС‚РєР° РѕС‚РґРµР»СЊРЅРѕР№ РєРЅРѕРїРєРё
 	 if(!READ_BIT(BUTTON_PIN,(1<<BUTTON))){												
      902:	4f 9b       	sbis	0x09, 7	; 9
      904:	c2 cf       	rjmp	.-124    	; 0x88a <__vector_14+0x78>
@@ -892,7 +892,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
      90a:	c6 cf       	rjmp	.-116    	; 0x898 <__vector_14+0x86>
 		 oldState=newState;
 	 }
-	//обработка кнопки энкодера
+	//РѕР±СЂР°Р±РѕС‚РєР° РєРЅРѕРїРєРё СЌРЅРєРѕРґРµСЂР°
 	 if(!READ_BIT(ENCODER_PIN,(1<<ENC_BUTTON))){										
 		if(count_enc_but < 255) {
 		 count_enc_but++;
@@ -904,7 +904,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
 			 count_enc_but=0;
 		 }
 	  }
-	  if(count_enc_but>0 && count_enc_but<LONG_TIMEOUT) {											//короткое нажатие
+	  if(count_enc_but>0 && count_enc_but<LONG_TIMEOUT) {											//РєРѕСЂРѕС‚РєРѕРµ РЅР°Р¶Р°С‚РёРµ
 		  if(READ_BIT(ENCODER_PIN,(1<<ENC_BUTTON))) {
 			  shortpress_enc_but=1;
      91a:	81 e0       	ldi	r24, 0x01	; 1
@@ -946,7 +946,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
 		count_but++;
 		}
 	}
-	if(count_but>0 && count_but< LONG_TIMEOUT) {									//короткое нажатие
+	if(count_but>0 && count_but< LONG_TIMEOUT) {									//РєРѕСЂРѕС‚РєРѕРµ РЅР°Р¶Р°С‚РёРµ
 		if(READ_BIT(BUTTON_PIN,(1<<BUTTON))) {
 			shortpress_but=1;
      94e:	81 e0       	ldi	r24, 0x01	; 1
@@ -1269,9 +1269,9 @@ void enc_process(void){
 					break ;
 				
 				case BUTTON_SELECT:
-					execute_menu_action();											//запуск обработчика функции 
+					execute_menu_action();											//Р·Р°РїСѓСЃРє РѕР±СЂР°Р±РѕС‚С‡РёРєР° С„СѓРЅРєС†РёРё 
      ad6:	0e 94 49 09 	call	0x1292	; 0x1292 <execute_menu_action>
-					enter_submenu();												//в current_menu адрес дочернего пункта меню
+					enter_submenu();												//РІ current_menu Р°РґСЂРµСЃ РґРѕС‡РµСЂРЅРµРіРѕ РїСѓРЅРєС‚Р° РјРµРЅСЋ
      ada:	0e 94 31 09 	call	0x1262	; 0x1262 <enter_submenu>
 					display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
      ade:	60 e0       	ldi	r22, 0x00	; 0
@@ -1367,21 +1367,21 @@ void i2c_init(void){
 
 uint8_t start_cond(void){
 	uint8_t status=0;
-	SET_BIT(TWCR,(1<<TWINT)|(1<<TWSTA)|(1<<TWEN));									//условие старта
+	SET_BIT(TWCR,(1<<TWINT)|(1<<TWSTA)|(1<<TWEN));									//СѓСЃР»РѕРІРёРµ СЃС‚Р°СЂС‚Р°
      b72:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
      b76:	84 6a       	ori	r24, 0xA4	; 164
      b78:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
-	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
+	while(!READ_BIT(TWCR,(1<<TWINT))){												//РѕР¶РёРґР°РµРј СѓСЃС‚Р°РЅРѕРІРєРё С„Р»Р°РіР° TWINT, С‡С‚Рѕ Р±СѓРґРµС‚ РѕР·РЅР°С‡Р°С‚СЊ РЅР°С‡Р°Р»Рѕ РїРµСЂРµРґР°С‡Рё
      b7c:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
      b80:	87 ff       	sbrs	r24, 7
      b82:	fc cf       	rjmp	.-8      	; 0xb7c <start_cond+0xa>
 		//	 while_delay=adc_conv;
-		//	if(adc_conv-while_delay>30) return START_ERROR;                         //если во время ожидания превышено время, то выходим из функции(чтобы не висло)
+		//	if(adc_conv-while_delay>30) return START_ERROR;                         //РµСЃР»Рё РІРѕ РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ РїСЂРµРІС‹С€РµРЅРѕ РІСЂРµРјСЏ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· С„СѓРЅРєС†РёРё(С‡С‚РѕР±С‹ РЅРµ РІРёСЃР»Рѕ)
 	};
 	status=TWSR&0xF8;
      b84:	80 91 b9 00 	lds	r24, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7f80b9>
      b88:	88 7f       	andi	r24, 0xF8	; 248
-	if ((status == 0x08)|(status == 0x10))											//проверка битов старта или рестарта регистра статуса TWSR
+	if ((status == 0x08)|(status == 0x10))											//РїСЂРѕРІРµСЂРєР° Р±РёС‚РѕРІ СЃС‚Р°СЂС‚Р° РёР»Рё СЂРµСЃС‚Р°СЂС‚Р° СЂРµРіРёСЃС‚СЂР° СЃС‚Р°С‚СѓСЃР° TWSR
      b8a:	88 30       	cpi	r24, 0x08	; 8
      b8c:	21 f0       	breq	.+8      	; 0xb96 <start_cond+0x24>
      b8e:	80 31       	cpi	r24, 0x10	; 16
@@ -1392,10 +1392,10 @@ uint8_t start_cond(void){
      b92:	80 e0       	ldi	r24, 0x00	; 0
      b94:	08 95       	ret
 		//	 while_delay=adc_conv;
-		//	if(adc_conv-while_delay>30) return START_ERROR;                         //если во время ожидания превышено время, то выходим из функции(чтобы не висло)
+		//	if(adc_conv-while_delay>30) return START_ERROR;                         //РµСЃР»Рё РІРѕ РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ РїСЂРµРІС‹С€РµРЅРѕ РІСЂРµРјСЏ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· С„СѓРЅРєС†РёРё(С‡С‚РѕР±С‹ РЅРµ РІРёСЃР»Рѕ)
 	};
 	status=TWSR&0xF8;
-	if ((status == 0x08)|(status == 0x10))											//проверка битов старта или рестарта регистра статуса TWSR
+	if ((status == 0x08)|(status == 0x10))											//РїСЂРѕРІРµСЂРєР° Р±РёС‚РѕРІ СЃС‚Р°СЂС‚Р° РёР»Рё СЂРµСЃС‚Р°СЂС‚Р° СЂРµРіРёСЃС‚СЂР° СЃС‚Р°С‚СѓСЃР° TWSR
 	return START_ERROR;
      b96:	82 e0       	ldi	r24, 0x02	; 2
 	else
@@ -1409,20 +1409,20 @@ uint8_t start_cond(void){
 uint8_t i2c_sendbyte(uint8_t byte){
 	WRITE_REG(TWDR,byte);
      b9a:	80 93 bb 00 	sts	0x00BB, r24	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7f80bb>
-	WRITE_REG(TWCR,(1<<TWINT) | (1<<TWEN));											//запускаем передачу
+	WRITE_REG(TWCR,(1<<TWINT) | (1<<TWEN));											//Р·Р°РїСѓСЃРєР°РµРј РїРµСЂРµРґР°С‡Сѓ
      b9e:	84 e8       	ldi	r24, 0x84	; 132
      ba0:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
-	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
+	while(!READ_BIT(TWCR,(1<<TWINT))){												//РѕР¶РёРґР°РµРј СѓСЃС‚Р°РЅРѕРІРєРё С„Р»Р°РіР° TWINT, С‡С‚Рѕ Р±СѓРґРµС‚ РѕР·РЅР°С‡Р°С‚СЊ РЅР°С‡Р°Р»Рѕ РїРµСЂРµРґР°С‡Рё
      ba4:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
      ba8:	87 ff       	sbrs	r24, 7
      baa:	fc cf       	rjmp	.-8      	; 0xba4 <i2c_sendbyte+0xa>
 		//	 while_delay=adc_conv;
 		//	if(adc_conv-while_delay>30) return SEND_ERROR;
 	};
-	uint8_t status = TWSR & 0xF8;													// Считывание кода статуса
+	uint8_t status = TWSR & 0xF8;													// РЎС‡РёС‚С‹РІР°РЅРёРµ РєРѕРґР° СЃС‚Р°С‚СѓСЃР°
      bac:	80 91 b9 00 	lds	r24, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7f80b9>
      bb0:	88 7f       	andi	r24, 0xF8	; 248
-	if ((status == 0x18) | (status == 0x28) | (status == 0x40))						// проверка кода статуса (передача SLA+W, пакета данных, SLA+R)
+	if ((status == 0x18) | (status == 0x28) | (status == 0x40))						// РїСЂРѕРІРµСЂРєР° РєРѕРґР° СЃС‚Р°С‚СѓСЃР° (РїРµСЂРµРґР°С‡Р° SLA+W, РїР°РєРµС‚Р° РґР°РЅРЅС‹С…, SLA+R)
      bb2:	21 e0       	ldi	r18, 0x01	; 1
      bb4:	88 31       	cpi	r24, 0x18	; 24
      bb6:	09 f0       	breq	.+2      	; 0xbba <i2c_sendbyte+0x20>
@@ -1443,8 +1443,8 @@ uint8_t i2c_sendbyte(uint8_t byte){
 		//	 while_delay=adc_conv;
 		//	if(adc_conv-while_delay>30) return SEND_ERROR;
 	};
-	uint8_t status = TWSR & 0xF8;													// Считывание кода статуса
-	if ((status == 0x18) | (status == 0x28) | (status == 0x40))						// проверка кода статуса (передача SLA+W, пакета данных, SLA+R)
+	uint8_t status = TWSR & 0xF8;													// РЎС‡РёС‚С‹РІР°РЅРёРµ РєРѕРґР° СЃС‚Р°С‚СѓСЃР°
+	if ((status == 0x18) | (status == 0x28) | (status == 0x40))						// РїСЂРѕРІРµСЂРєР° РєРѕРґР° СЃС‚Р°С‚СѓСЃР° (РїРµСЂРµРґР°С‡Р° SLA+W, РїР°РєРµС‚Р° РґР°РЅРЅС‹С…, SLA+R)
 	return ACK;
      bce:	84 e0       	ldi	r24, 0x04	; 4
 	else
@@ -1467,23 +1467,23 @@ void stop_cond(void){
 00000bde <i2c_readbyte>:
 }
 
-uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status определяет, что будем отправлять слейву после приема байта-nack или ack
+uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status РѕРїСЂРµРґРµР»СЏРµС‚, С‡С‚Рѕ Р±СѓРґРµРј РѕС‚РїСЂР°РІР»СЏС‚СЊ СЃР»РµР№РІСѓ РїРѕСЃР»Рµ РїСЂРёРµРјР° Р±Р°Р№С‚Р°-nack РёР»Рё ack
 	if (nack_status == ACK)
      bde:	84 30       	cpi	r24, 0x04	; 4
      be0:	69 f0       	breq	.+26     	; 0xbfc <i2c_readbyte+0x1e>
 	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN|1<<TWEA));
 	else
-	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN));										//снюхиваем байт и передаем NACK(если забирая последний байт у слева не сказать ему NACK, то он продолжит удерживать линию и дальнейшая работа с шиной станет невозможна)
+	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN));										//СЃРЅСЋС…РёРІР°РµРј Р±Р°Р№С‚ Рё РїРµСЂРµРґР°РµРј NACK(РµСЃР»Рё Р·Р°Р±РёСЂР°СЏ РїРѕСЃР»РµРґРЅРёР№ Р±Р°Р№С‚ Сѓ СЃР»РµРІР° РЅРµ СЃРєР°Р·Р°С‚СЊ РµРјСѓ NACK, С‚Рѕ РѕРЅ РїСЂРѕРґРѕР»Р¶РёС‚ СѓРґРµСЂР¶РёРІР°С‚СЊ Р»РёРЅРёСЋ Рё РґР°Р»СЊРЅРµР№С€Р°СЏ СЂР°Р±РѕС‚Р° СЃ С€РёРЅРѕР№ СЃС‚Р°РЅРµС‚ РЅРµРІРѕР·РјРѕР¶РЅР°)
      be2:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
      be6:	8b 73       	andi	r24, 0x3B	; 59
      be8:	84 68       	ori	r24, 0x84	; 132
      bea:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
-	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
+	while(!READ_BIT(TWCR,(1<<TWINT))){												//РѕР¶РёРґР°РµРј СѓСЃС‚Р°РЅРѕРІРєРё С„Р»Р°РіР° TWINT, С‡С‚Рѕ Р±СѓРґРµС‚ РѕР·РЅР°С‡Р°С‚СЊ РЅР°С‡Р°Р»Рѕ РїРµСЂРµРґР°С‡Рё
      bee:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
      bf2:	87 ff       	sbrs	r24, 7
      bf4:	fc cf       	rjmp	.-8      	; 0xbee <i2c_readbyte+0x10>
 		//	while_delay=adc_conv;
-		//	if(adc_conv-while_delay>30) return SEND_ERROR;                          //если во время ожидания превышено время, то выходим из функции
+		//	if(adc_conv-while_delay>30) return SEND_ERROR;                          //РµСЃР»Рё РІРѕ РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ РїСЂРµРІС‹С€РµРЅРѕ РІСЂРµРјСЏ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· С„СѓРЅРєС†РёРё
 	};
 	return TWDR;
      bf6:	80 91 bb 00 	lds	r24, 0x00BB	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7f80bb>
@@ -1492,7 +1492,7 @@ uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status определяет, ч
 	SET_BIT(TWCR,(1<<TWINT)|(1<<TWSTO)|(1<<TWEN));
 }
 
-uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status определяет, что будем отправлять слейву после приема байта-nack или ack
+uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status РѕРїСЂРµРґРµР»СЏРµС‚, С‡С‚Рѕ Р±СѓРґРµРј РѕС‚РїСЂР°РІР»СЏС‚СЊ СЃР»РµР№РІСѓ РїРѕСЃР»Рµ РїСЂРёРµРјР° Р±Р°Р№С‚Р°-nack РёР»Рё ack
 	if (nack_status == ACK)
 	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN|1<<TWEA));
      bfc:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
@@ -1501,7 +1501,7 @@ uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status определяет, ч
      c06:	f3 cf       	rjmp	.-26     	; 0xbee <i2c_readbyte+0x10>
 
 00000c08 <i2c_scanner>:
-		//	if(adc_conv-while_delay>30) return SEND_ERROR;                          //если во время ожидания превышено время, то выходим из функции
+		//	if(adc_conv-while_delay>30) return SEND_ERROR;                          //РµСЃР»Рё РІРѕ РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ РїСЂРµРІС‹С€РµРЅРѕ РІСЂРµРјСЏ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· С„СѓРЅРєС†РёРё
 	};
 	return TWDR;
 }
@@ -1523,7 +1523,7 @@ void i2c_scanner(uint8_t *scans){
 
 uint8_t i2c_sendbyte(uint8_t byte){
 	WRITE_REG(TWDR,byte);
-	WRITE_REG(TWCR,(1<<TWINT) | (1<<TWEN));											//запускаем передачу
+	WRITE_REG(TWCR,(1<<TWINT) | (1<<TWEN));											//Р·Р°РїСѓСЃРєР°РµРј РїРµСЂРµРґР°С‡Сѓ
      c1c:	84 e8       	ldi	r24, 0x84	; 132
      c1e:	f8 2e       	mov	r15, r24
      c20:	30 2f       	mov	r19, r16
@@ -1532,16 +1532,16 @@ uint8_t i2c_sendbyte(uint8_t byte){
 
 uint8_t start_cond(void){
 	uint8_t status=0;
-	SET_BIT(TWCR,(1<<TWINT)|(1<<TWSTA)|(1<<TWEN));									//условие старта
+	SET_BIT(TWCR,(1<<TWINT)|(1<<TWSTA)|(1<<TWEN));									//СѓСЃР»РѕРІРёРµ СЃС‚Р°СЂС‚Р°
      c22:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
      c26:	84 6a       	ori	r24, 0xA4	; 164
      c28:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
-	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
+	while(!READ_BIT(TWCR,(1<<TWINT))){												//РѕР¶РёРґР°РµРј СѓСЃС‚Р°РЅРѕРІРєРё С„Р»Р°РіР° TWINT, С‡С‚Рѕ Р±СѓРґРµС‚ РѕР·РЅР°С‡Р°С‚СЊ РЅР°С‡Р°Р»Рѕ РїРµСЂРµРґР°С‡Рё
      c2c:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
      c30:	87 ff       	sbrs	r24, 7
      c32:	fc cf       	rjmp	.-8      	; 0xc2c <i2c_scanner+0x24>
 		//	 while_delay=adc_conv;
-		//	if(adc_conv-while_delay>30) return START_ERROR;                         //если во время ожидания превышено время, то выходим из функции(чтобы не висло)
+		//	if(adc_conv-while_delay>30) return START_ERROR;                         //РµСЃР»Рё РІРѕ РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ РїСЂРµРІС‹С€РµРЅРѕ РІСЂРµРјСЏ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· С„СѓРЅРєС†РёРё(С‡С‚РѕР±С‹ РЅРµ РІРёСЃР»Рѕ)
 	};
 	status=TWSR&0xF8;
      c34:	80 91 b9 00 	lds	r24, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7f80b9>
@@ -1552,19 +1552,19 @@ uint8_t start_cond(void){
 uint8_t i2c_sendbyte(uint8_t byte){
 	WRITE_REG(TWDR,byte);
      c38:	30 93 bb 00 	sts	0x00BB, r19	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7f80bb>
-	WRITE_REG(TWCR,(1<<TWINT) | (1<<TWEN));											//запускаем передачу
+	WRITE_REG(TWCR,(1<<TWINT) | (1<<TWEN));											//Р·Р°РїСѓСЃРєР°РµРј РїРµСЂРµРґР°С‡Сѓ
      c3c:	f0 92 bc 00 	sts	0x00BC, r15	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
-	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
+	while(!READ_BIT(TWCR,(1<<TWINT))){												//РѕР¶РёРґР°РµРј СѓСЃС‚Р°РЅРѕРІРєРё С„Р»Р°РіР° TWINT, С‡С‚Рѕ Р±СѓРґРµС‚ РѕР·РЅР°С‡Р°С‚СЊ РЅР°С‡Р°Р»Рѕ РїРµСЂРµРґР°С‡Рё
      c40:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
      c44:	87 ff       	sbrs	r24, 7
      c46:	fc cf       	rjmp	.-8      	; 0xc40 <i2c_scanner+0x38>
 		//	 while_delay=adc_conv;
 		//	if(adc_conv-while_delay>30) return SEND_ERROR;
 	};
-	uint8_t status = TWSR & 0xF8;													// Считывание кода статуса
+	uint8_t status = TWSR & 0xF8;													// РЎС‡РёС‚С‹РІР°РЅРёРµ РєРѕРґР° СЃС‚Р°С‚СѓСЃР°
      c48:	80 91 b9 00 	lds	r24, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7f80b9>
      c4c:	88 7f       	andi	r24, 0xF8	; 248
-	if ((status == 0x18) | (status == 0x28) | (status == 0x40))						// проверка кода статуса (передача SLA+W, пакета данных, SLA+R)
+	if ((status == 0x18) | (status == 0x28) | (status == 0x40))						// РїСЂРѕРІРµСЂРєР° РєРѕРґР° СЃС‚Р°С‚СѓСЃР° (РїРµСЂРµРґР°С‡Р° SLA+W, РїР°РєРµС‚Р° РґР°РЅРЅС‹С…, SLA+R)
      c4e:	21 e0       	ldi	r18, 0x01	; 1
      c50:	88 31       	cpi	r24, 0x18	; 24
      c52:	09 f0       	breq	.+2      	; 0xc56 <i2c_scanner+0x4e>
@@ -1610,21 +1610,21 @@ void i2c_scanner(uint8_t *scans){
      c84:	ef 90       	pop	r14
      c86:	08 95       	ret
 
-uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status определяет, что будем отправлять слейву после приема байта-nack или ack
+uint8_t i2c_readbyte(uint8_t nack_status){											//nack_status РѕРїСЂРµРґРµР»СЏРµС‚, С‡С‚Рѕ Р±СѓРґРµРј РѕС‚РїСЂР°РІР»СЏС‚СЊ СЃР»РµР№РІСѓ РїРѕСЃР»Рµ РїСЂРёРµРјР° Р±Р°Р№С‚Р°-nack РёР»Рё ack
 	if (nack_status == ACK)
 	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN|1<<TWEA));
 	else
-	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN));										//снюхиваем байт и передаем NACK(если забирая последний байт у слева не сказать ему NACK, то он продолжит удерживать линию и дальнейшая работа с шиной станет невозможна)
+	MODIFY_REG(TWCR,0xC4,(1<<TWINT|1<<TWEN));										//СЃРЅСЋС…РёРІР°РµРј Р±Р°Р№С‚ Рё РїРµСЂРµРґР°РµРј NACK(РµСЃР»Рё Р·Р°Р±РёСЂР°СЏ РїРѕСЃР»РµРґРЅРёР№ Р±Р°Р№С‚ Сѓ СЃР»РµРІР° РЅРµ СЃРєР°Р·Р°С‚СЊ РµРјСѓ NACK, С‚Рѕ РѕРЅ РїСЂРѕРґРѕР»Р¶РёС‚ СѓРґРµСЂР¶РёРІР°С‚СЊ Р»РёРЅРёСЋ Рё РґР°Р»СЊРЅРµР№С€Р°СЏ СЂР°Р±РѕС‚Р° СЃ С€РёРЅРѕР№ СЃС‚Р°РЅРµС‚ РЅРµРІРѕР·РјРѕР¶РЅР°)
      c88:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
      c8c:	8b 73       	andi	r24, 0x3B	; 59
      c8e:	84 68       	ori	r24, 0x84	; 132
      c90:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
-	while(!READ_BIT(TWCR,(1<<TWINT))){												//ожидаем установки флага TWINT, что будет означать начало передачи
+	while(!READ_BIT(TWCR,(1<<TWINT))){												//РѕР¶РёРґР°РµРј СѓСЃС‚Р°РЅРѕРІРєРё С„Р»Р°РіР° TWINT, С‡С‚Рѕ Р±СѓРґРµС‚ РѕР·РЅР°С‡Р°С‚СЊ РЅР°С‡Р°Р»Рѕ РїРµСЂРµРґР°С‡Рё
      c94:	80 91 bc 00 	lds	r24, 0x00BC	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7f80bc>
      c98:	87 ff       	sbrs	r24, 7
      c9a:	fc cf       	rjmp	.-8      	; 0xc94 <i2c_scanner+0x8c>
 		//	while_delay=adc_conv;
-		//	if(adc_conv-while_delay>30) return SEND_ERROR;                          //если во время ожидания превышено время, то выходим из функции
+		//	if(adc_conv-while_delay>30) return SEND_ERROR;                          //РµСЃР»Рё РІРѕ РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ РїСЂРµРІС‹С€РµРЅРѕ РІСЂРµРјСЏ, С‚Рѕ РІС‹С…РѕРґРёРј РёР· С„СѓРЅРєС†РёРё
 	};
 	return TWDR;
      c9c:	80 91 bb 00 	lds	r24, 0x00BB	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7f80bb>
@@ -1640,7 +1640,7 @@ void stop_cond(void){
 		start_cond();
 		uint8_t answ=i2c_sendbyte(i);
 		if(answ==ACK){
-			i2c_readbyte(NACK);														//слейву необходимо отправить NACK, чтобы он не держал линию
+			i2c_readbyte(NACK);														//СЃР»РµР№РІСѓ РЅРµРѕР±С…РѕРґРёРјРѕ РѕС‚РїСЂР°РІРёС‚СЊ NACK, С‡С‚РѕР±С‹ РѕРЅ РЅРµ РґРµСЂР¶Р°Р» Р»РёРЅРёСЋ
 			stop_cond();
 			scans[cntr++]=i;
      caa:	ee 24       	eor	r14, r14
@@ -1660,7 +1660,7 @@ void stop_cond(void){
 		start_cond();
 		uint8_t answ=i2c_sendbyte(i);
 		if(answ==ACK){
-			i2c_readbyte(NACK);														//слейву необходимо отправить NACK, чтобы он не держал линию
+			i2c_readbyte(NACK);														//СЃР»РµР№РІСѓ РЅРµРѕР±С…РѕРґРёРјРѕ РѕС‚РїСЂР°РІРёС‚СЊ NACK, С‡С‚РѕР±С‹ РѕРЅ РЅРµ РґРµСЂР¶Р°Р» Р»РёРЅРёСЋ
 			stop_cond();
 			scans[cntr++]=i;
      cc6:	4e 2d       	mov	r20, r14
@@ -1682,11 +1682,11 @@ int main(void){
      cd0:	8a ea       	ldi	r24, 0xAA	; 170
      cd2:	94 e0       	ldi	r25, 0x04	; 4
      cd4:	0e 94 04 06 	call	0xc08	; 0xc08 <i2c_scanner>
-	menu_init(&main_menu_item_1);                                                       //инициализируем меню и устанавливаем указатель на первый пункт
+	menu_init(&main_menu_item_1);                                                       //РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РјРµРЅСЋ Рё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РїРµСЂРІС‹Р№ РїСѓРЅРєС‚
      cd8:	8a eb       	ldi	r24, 0xBA	; 186
      cda:	94 e0       	ldi	r25, 0x04	; 4
      cdc:	0e 94 77 06 	call	0xcee	; 0xcee <menu_init>
-	display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);                                  //отрисовываем начальное меню
+	display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);                                  //РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј РЅР°С‡Р°Р»СЊРЅРѕРµ РјРµРЅСЋ
      ce0:	60 e0       	ldi	r22, 0x00	; 0
      ce2:	84 e1       	ldi	r24, 0x14	; 20
      ce4:	0e 94 69 08 	call	0x10d2	; 0x10d2 <display_current_menu>
@@ -2167,7 +2167,7 @@ void display_pointer(const char *pointer) {
     1086:	80 91 b8 04 	lds	r24, 0x04B8	; 0x8004b8 <pointer_clear_flag>
     108a:	88 23       	and	r24, r24
     108c:	09 f1       	breq	.+66     	; 0x10d0 <display_pointer+0x4a>
-		if(prev_menu != NULL && prev_menu != current_menu) {  // очищаем старый указатель если меню изменилось
+		if(prev_menu != NULL && prev_menu != current_menu) {  // РѕС‡РёС‰Р°РµРј СЃС‚Р°СЂС‹Р№ СѓРєР°Р·Р°С‚РµР»СЊ РµСЃР»Рё РјРµРЅСЋ РёР·РјРµРЅРёР»РѕСЃСЊ
     108e:	20 91 b4 04 	lds	r18, 0x04B4	; 0x8004b4 <prev_menu.2768>
     1092:	30 91 b5 04 	lds	r19, 0x04B5	; 0x8004b5 <prev_menu.2768+0x1>
     1096:	80 91 b6 04 	lds	r24, 0x04B6	; 0x8004b6 <current_menu>
@@ -2199,7 +2199,7 @@ void display_pointer(const char *pointer) {
 	}
 }
 
-//функция отображения всех пунктов текущего меню
+//С„СѓРЅРєС†РёСЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІСЃРµС… РїСѓРЅРєС‚РѕРІ С‚РµРєСѓС‰РµРіРѕ РјРµРЅСЋ
 void display_current_menu(uint8_t xstart, uint8_t ystart) {
     10d2:	8f 92       	push	r8
     10d4:	9f 92       	push	r9
@@ -2266,7 +2266,7 @@ void display_current_menu(uint8_t xstart, uint8_t ystart) {
     1150:	ce 01       	movw	r24, r28
     1152:	0e 94 4a 0c 	call	0x1894	; 0x1894 <draw_string>
 
-//функция отображения всех пунктов текущего меню
+//С„СѓРЅРєС†РёСЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІСЃРµС… РїСѓРЅРєС‚РѕРІ С‚РµРєСѓС‰РµРіРѕ РјРµРЅСЋ
 void display_current_menu(uint8_t xstart, uint8_t ystart) {
 	uint8_t space=pgm_read_byte(MENU_FONT+1)+2;
 	clear_pointer(current_menu);
@@ -2468,7 +2468,7 @@ void enter_submenu(void) {
 	}
 }
 
-void execute_menu_action(void) {                               // функция запуска обработчика пункта меню, если он есть для данного пункта меню
+void execute_menu_action(void) {                               // С„СѓРЅРєС†РёСЏ Р·Р°РїСѓСЃРєР° РѕР±СЂР°Р±РѕС‚С‡РёРєР° РїСѓРЅРєС‚Р° РјРµРЅСЋ, РµСЃР»Рё РѕРЅ РµСЃС‚СЊ РґР»СЏ РґР°РЅРЅРѕРіРѕ РїСѓРЅРєС‚Р° РјРµРЅСЋ
 	if (current_menu->action)current_menu->action();
     1292:	e0 91 b6 04 	lds	r30, 0x04B6	; 0x8004b6 <current_menu>
     1296:	f0 91 b7 04 	lds	r31, 0x04B7	; 0x8004b7 <current_menu+0x1>
@@ -3018,26 +3018,26 @@ void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bco
     16b0:	52 2e       	mov	r5, r18
     16b2:	43 2e       	mov	r4, r19
 	
-	// Получаем параметры шрифта
-	const uint8_t data_w = pgm_read_byte(font) / 8;     // ширина в байтах
+	// РџРѕР»СѓС‡Р°РµРј РїР°СЂР°РјРµС‚СЂС‹ С€СЂРёС„С‚Р°
+	const uint8_t data_w = pgm_read_byte(font) / 8;     // С€РёСЂРёРЅР° РІ Р±Р°Р№С‚Р°С…
     16b4:	f7 01       	movw	r30, r14
     16b6:	24 91       	lpm	r18, Z
     16b8:	26 95       	lsr	r18
     16ba:	26 95       	lsr	r18
     16bc:	26 95       	lsr	r18
-	const uint8_t letter_height = pgm_read_byte(font + 1);  // высота символа
+	const uint8_t letter_height = pgm_read_byte(font + 1);  // РІС‹СЃРѕС‚Р° СЃРёРјРІРѕР»Р°
     16be:	31 96       	adiw	r30, 0x01	; 1
     16c0:	34 91       	lpm	r19, Z
-	const uint8_t letter_width = data_w * 8;            // ширина символа в пикселях
+	const uint8_t letter_width = data_w * 8;            // С€РёСЂРёРЅР° СЃРёРјРІРѕР»Р° РІ РїРёРєСЃРµР»СЏС…
     16c2:	22 2e       	mov	r2, r18
     16c4:	22 0c       	add	r2, r2
     16c6:	22 0c       	add	r2, r2
     16c8:	22 0c       	add	r2, r2
-	const uint8_t ascii_offset = pgm_read_byte(font + 2);  // смещение ASCII
+	const uint8_t ascii_offset = pgm_read_byte(font + 2);  // СЃРјРµС‰РµРЅРёРµ ASCII
     16ca:	31 96       	adiw	r30, 0x01	; 1
     16cc:	e4 91       	lpm	r30, Z
 	
-	// Вычисляем смещение символа в массиве
+	// Р’С‹С‡РёСЃР»СЏРµРј СЃРјРµС‰РµРЅРёРµ СЃРёРјРІРѕР»Р° РІ РјР°СЃСЃРёРІРµ
 	const uint16_t offset = (letter - ascii_offset) * letter_height * data_w + 4;
     16ce:	50 e0       	ldi	r21, 0x00	; 0
     16d0:	4e 1b       	sub	r20, r30
@@ -3080,7 +3080,7 @@ void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bco
     1718:	90 01       	movw	r18, r0
     171a:	11 24       	eor	r1, r1
 	
-	// Буфер для хранения данных символа
+	// Р‘СѓС„РµСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С… СЃРёРјРІРѕР»Р°
 	uint8_t letter_buf[400] = {0};
     171c:	ae 01       	movw	r20, r28
     171e:	4f 5f       	subi	r20, 0xFF	; 255
@@ -3102,7 +3102,7 @@ void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bco
     173e:	50 40       	sbci	r21, 0x00	; 0
     1740:	e1 f7       	brne	.-8      	; 0x173a <draw_char+0xc0>
 	
-	// Считываем данные символа из памяти
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃРёРјРІРѕР»Р° РёР· РїР°РјСЏС‚Рё
 	for(uint16_t i = 0; i < lettersize; i++) {
     1742:	21 15       	cp	r18, r1
     1744:	31 05       	cpc	r19, r1
@@ -3118,10 +3118,10 @@ void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bco
     1756:	4d 93       	st	X+, r20
     1758:	31 96       	adiw	r30, 0x01	; 1
 	
-	// Буфер для хранения данных символа
+	// Р‘СѓС„РµСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С… СЃРёРјРІРѕР»Р°
 	uint8_t letter_buf[400] = {0};
 	
-	// Считываем данные символа из памяти
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃРёРјРІРѕР»Р° РёР· РїР°РјСЏС‚Рё
 	for(uint16_t i = 0; i < lettersize; i++) {
     175a:	a2 17       	cp	r26, r18
     175c:	b3 07       	cpc	r27, r19
@@ -3129,10 +3129,10 @@ void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bco
 		letter_buf[i] = pgm_read_byte(font + offset + i);
 	}
 	
-	// Устанавливаем позицию и режим записи
+	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРѕР·РёС†РёСЋ Рё СЂРµР¶РёРј Р·Р°РїРёСЃРё
 	START_Tx;
     1760:	28 98       	cbi	0x05, 0	; 5
-	setXY(xstart, letter_width, ystart, letter_height);  // Указываем реальные размеры символа
+	setXY(xstart, letter_width, ystart, letter_height);  // РЈРєР°Р·С‹РІР°РµРј СЂРµР°Р»СЊРЅС‹Рµ СЂР°Р·РјРµСЂС‹ СЃРёРјРІРѕР»Р°
     1762:	a2 2c       	mov	r10, r2
     1764:	b1 2c       	mov	r11, r1
     1766:	cb 56       	subi	r28, 0x6B	; 107
@@ -3144,8 +3144,8 @@ void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bco
     1772:	ab 01       	movw	r20, r22
     1774:	b5 01       	movw	r22, r10
     1776:	0e 94 9e 0a 	call	0x153c	; 0x153c <setXY>
-SET_BIT(SPI_DDR,(1<<RESET)); // сброс
-SET_BIT(SPI_DDR,(1<<CS));    // чип селект
+SET_BIT(SPI_DDR,(1<<RESET)); // СЃР±СЂРѕСЃ
+SET_BIT(SPI_DDR,(1<<CS));    // С‡РёРї СЃРµР»РµРєС‚
 }
 
 void send_command(uint8_t byte){
@@ -3155,9 +3155,9 @@ void send_command(uint8_t byte){
     177c:	8c e2       	ldi	r24, 0x2C	; 44
     177e:	0e 94 c5 09 	call	0x138a	; 0x138a <spi_sendbyte>
 	
-	// Устанавливаем позицию и режим записи
+	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРѕР·РёС†РёСЋ Рё СЂРµР¶РёРј Р·Р°РїРёСЃРё
 	START_Tx;
-	setXY(xstart, letter_width, ystart, letter_height);  // Указываем реальные размеры символа
+	setXY(xstart, letter_width, ystart, letter_height);  // РЈРєР°Р·С‹РІР°РµРј СЂРµР°Р»СЊРЅС‹Рµ СЂР°Р·РјРµСЂС‹ СЃРёРјРІРѕР»Р°
 	send_command(ST7735_RAMWR);
 	ST7735_DATA;
     1782:	2a 9a       	sbi	0x05, 2	; 5
@@ -3175,7 +3175,7 @@ void send_command(uint8_t byte){
 		for(uint16_t x = 0; x < letter_width; x += 8) {
 			uint8_t data = letter_buf[y * data_w + x / 8];
 			for(uint8_t bit = 0; bit < 8; bit++) {
-				if (x + bit >= letter_width) break;			// Защита от выхода за границы
+				if (x + bit >= letter_width) break;			// Р—Р°С‰РёС‚Р° РѕС‚ РІС‹С…РѕРґР° Р·Р° РіСЂР°РЅРёС†С‹
 				spi_sendbyte((data & 0x80) ? (fcolor >> 8) : (bcolor >> 8));
     1796:	cd 56       	subi	r28, 0x6D	; 109
     1798:	de 4f       	sbci	r29, 0xFE	; 254
@@ -3185,7 +3185,7 @@ void send_command(uint8_t byte){
     17a0:	d1 40       	sbci	r29, 0x01	; 1
     17a2:	61 2c       	mov	r6, r1
     17a4:	71 2c       	mov	r7, r1
-	setXY(xstart, letter_width, ystart, letter_height);  // Указываем реальные размеры символа
+	setXY(xstart, letter_width, ystart, letter_height);  // РЈРєР°Р·С‹РІР°РµРј СЂРµР°Р»СЊРЅС‹Рµ СЂР°Р·РјРµСЂС‹ СЃРёРјРІРѕР»Р°
 	send_command(ST7735_RAMWR);
 	ST7735_DATA;
 	
@@ -3225,7 +3225,7 @@ void send_command(uint8_t byte){
     17e2:	d1 1c       	adc	r13, r1
     17e4:	0d c0       	rjmp	.+26     	; 0x1800 <draw_char+0x186>
 			for(uint8_t bit = 0; bit < 8; bit++) {
-				if (x + bit >= letter_width) break;			// Защита от выхода за границы
+				if (x + bit >= letter_width) break;			// Р—Р°С‰РёС‚Р° РѕС‚ РІС‹С…РѕРґР° Р·Р° РіСЂР°РЅРёС†С‹
 				spi_sendbyte((data & 0x80) ? (fcolor >> 8) : (bcolor >> 8));
     17e6:	84 2d       	mov	r24, r4
     17e8:	0e 94 c5 09 	call	0x138a	; 0x138a <spi_sendbyte>
@@ -3246,7 +3246,7 @@ void send_command(uint8_t byte){
     17fa:	ce 14       	cp	r12, r14
     17fc:	df 04       	cpc	r13, r15
     17fe:	51 f0       	breq	.+20     	; 0x1814 <draw_char+0x19a>
-				if (x + bit >= letter_width) break;			// Защита от выхода за границы
+				if (x + bit >= letter_width) break;			// Р—Р°С‰РёС‚Р° РѕС‚ РІС‹С…РѕРґР° Р·Р° РіСЂР°РЅРёС†С‹
     1800:	ea 14       	cp	r14, r10
     1802:	fb 04       	cpc	r15, r11
     1804:	38 f4       	brcc	.+14     	; 0x1814 <draw_char+0x19a>
@@ -3259,7 +3259,7 @@ void send_command(uint8_t byte){
     1810:	80 2f       	mov	r24, r16
     1812:	ed cf       	rjmp	.-38     	; 0x17ee <draw_char+0x174>
     1814:	76 01       	movw	r14, r12
-	setXY(xstart, letter_width, ystart, letter_height);  // Указываем реальные размеры символа
+	setXY(xstart, letter_width, ystart, letter_height);  // РЈРєР°Р·С‹РІР°РµРј СЂРµР°Р»СЊРЅС‹Рµ СЂР°Р·РјРµСЂС‹ СЃРёРјРІРѕР»Р°
 	send_command(ST7735_RAMWR);
 	ST7735_DATA;
 	
@@ -3269,7 +3269,7 @@ void send_command(uint8_t byte){
     1818:	db 04       	cpc	r13, r11
     181a:	b0 f2       	brcs	.-84     	; 0x17c8 <draw_char+0x14e>
 	START_Tx;
-	setXY(xstart, letter_width, ystart, letter_height);  // Указываем реальные размеры символа
+	setXY(xstart, letter_width, ystart, letter_height);  // РЈРєР°Р·С‹РІР°РµРј СЂРµР°Р»СЊРЅС‹Рµ СЂР°Р·РјРµСЂС‹ СЃРёРјРІРѕР»Р°
 	send_command(ST7735_RAMWR);
 	ST7735_DATA;
 	
@@ -3492,7 +3492,7 @@ void print_hexnumber(uint16_t number){
     1988:	ff 93       	push	r31
     198a:	ef 93       	push	r30
     198c:	0e 94 f2 11 	call	0x23e4	; 0x23e4 <sprintf>
-	while(!READ_BIT(UCSR0A,(1<<RXC0)));								//ожидание прихода байта
+	while(!READ_BIT(UCSR0A,(1<<RXC0)));								//РѕР¶РёРґР°РЅРёРµ РїСЂРёС…РѕРґР° Р±Р°Р№С‚Р°
 	return UDR0;										
 }
 
@@ -3512,14 +3512,14 @@ void print_string(char *string){
 	WRITE_REG(UBRR0H,(uint8_t)(SPEED >> 8));
 }
 
-void uart_out(uint8_t data){										// передача байта через UART
-	while(!READ_BIT(UCSR0A,(1<<UDRE0)));							// ожидание готовности UART к передаче
+void uart_out(uint8_t data){										// РїРµСЂРµРґР°С‡Р° Р±Р°Р№С‚Р° С‡РµСЂРµР· UART
+	while(!READ_BIT(UCSR0A,(1<<UDRE0)));							// РѕР¶РёРґР°РЅРёРµ РіРѕС‚РѕРІРЅРѕСЃС‚Рё UART Рє РїРµСЂРµРґР°С‡Рµ
     19a4:	80 91 c0 00 	lds	r24, 0x00C0	; 0x8000c0 <__TEXT_REGION_LENGTH__+0x7f80c0>
     19a8:	85 ff       	sbrs	r24, 5
     19aa:	fc cf       	rjmp	.-8      	; 0x19a4 <print_hexnumber+0x4c>
-	WRITE_REG(UDR0,data);											// запись в регистр UDR байта данных начинает процесс передачи
+	WRITE_REG(UDR0,data);											// Р·Р°РїРёСЃСЊ РІ СЂРµРіРёСЃС‚СЂ UDR Р±Р°Р№С‚Р° РґР°РЅРЅС‹С… РЅР°С‡РёРЅР°РµС‚ РїСЂРѕС†РµСЃСЃ РїРµСЂРµРґР°С‡Рё
     19ac:	90 93 c6 00 	sts	0x00C6, r25	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7f80c6>
-	while(!READ_BIT(UCSR0A,(1<<RXC0)));								//ожидание прихода байта
+	while(!READ_BIT(UCSR0A,(1<<RXC0)));								//РѕР¶РёРґР°РЅРёРµ РїСЂРёС…РѕРґР° Р±Р°Р№С‚Р°
 	return UDR0;										
 }
 

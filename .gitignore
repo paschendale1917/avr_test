@@ -1,0 +1,11 @@
+*.hex
+*.elf
+*.o
+*.a
+*.so
+*.dll
+*.exe
+*.map
+*.lst
+*.d
+*.bak
