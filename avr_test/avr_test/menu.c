@@ -26,7 +26,7 @@ MenuItem menu_item_3_1,menu_item_3_2,menu_item_3_3,menu_item_3_4,menu_item_3_5;
 //при перемещении указателя вся инфа берется отсюда
 //описание всех элементов структуры в заголовочном файле
 void menu_init(MenuItem* start_menu) {
-	const uint8_t line_height = pgm_read_byte(MENU_FONT + 1) + 2;
+	const uint8_t line_height = (pgm_read_byte(MENU_FONT + 1) + POINTER_TAB);
 	//главное меню
 	main_menu_item_1 =  (MenuItem){main_menu,  4, NULL,					&main_menu_item_4,  &main_menu_item_2,  NULL,		       &menu_item_1_1,  X_POINTER_OFFSET, Y_POINTER_OFFSET};
 	main_menu_item_2 =  (MenuItem){main_menu,  4, NULL,					&main_menu_item_1,  &main_menu_item_3,  NULL,		       &menu_item_2_1,  X_POINTER_OFFSET, Y_POINTER_OFFSET + 1 * line_height};
@@ -103,7 +103,7 @@ void enter_upmenu(void) {
 		current_menu = current_menu->parent;										//загружаем указатель на родительский пункт меню
 		pointer_clear_flag = 1;														//выставляет флаг необходимости отрисовать указатель
 		display_current_menu(X_MENU_OFFSET, Y_MENU_OFFSET);							//отрисовываем меню и указатель
-	}
+	}else if(current_menu->parent==NULL)menustate=0;                                //если активно меню самого высокого порядка(у которого нет родительского меню), то выходим на главный экран
 }
 
 //вход в дочернее меню

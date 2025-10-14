@@ -1,7 +1,7 @@
 ﻿#include "handlers.h"
 
-uint8_t menustate =255;
-uint8_t clear_display_flag=0;
+uint8_t menustate =0;
+uint8_t clear_display_flag=1;
 
 void hardware_init(void){
 	enc_ports_init();
@@ -20,43 +20,6 @@ void hardware_init(void){
 	
 }
 
-void test_handler(void){
-	pwm1A_start(pwm_value);
-	 pwm_value>100?pwm_value=100:0;
-	 draw_string(0,00,"backlight",0,BACKGROUND_COLOR,RED,TinyFont);
-	 draw_number(100,00,pwm_value,0,BACKGROUND_COLOR,WHITE,TinyFont);
-	 if(adc_conv_flag){
-		draw_string(0,40,"bme280_id",0,BACKGROUND_COLOR,RED,TinyFont);
-		draw_hexnumber(100,40,bme280_readbyte(BME280_ADDR, ID),0,BACKGROUND_COLOR,RED,TinyFont);
-		draw_string(0,20,"mpu6050",0,BACKGROUND_COLOR,RED,DotMatrix_M_Slash);
-		draw_hexnumber(100,20,whoami(),0,BACKGROUND_COLOR,RED,TinyFont);
-		ema_filter_array(ADC_data,255,ALFHA);
-		uint16_t dt=ADC_average(ADC_data);
-		float voltage=(dt*4.51)/1024;
-		draw_string(0,10,"voltage",0,BACKGROUND_COLOR,RED,TinyFont);
-		draw_float_number(100,10,voltage,"%0.1f",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
-		draw_string(132,10,"v",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
-		print_string("ADC_value ");
-		print_number(dt);
-		print_string("\r\n");
-		mpu6050_ready_data(&mpu6050_dt);
-		print_mpu6050_data();
-		adc_conv_flag=0;
-	  }
-	  update_bme280();
-	  draw_string(0,30,"mpu_temp",0,BACKGROUND_COLOR,RED,TinyFont);
-	  draw_float_number(100,30,mpu6050_temp(),"%.1f",0,BACKGROUND_COLOR,WHITE,TinyFont);
-	  if(enc-prev_enc>0){
-		print_string("clockwise ");
-		print_number(enc);
-		print_string("\r\n");
-	  } else if(enc-prev_enc<0){
-		   print_string("counterclockwise ");
-		   print_number(enc);
-		   print_string("\r\n");
-	   		}
-	 prev_enc=enc;	
-}
 
 void menu_process(void){
 	switch(readButtonState()){
@@ -74,7 +37,7 @@ void menu_process(void){
 					//enc++;
 					menu_navigate_next();
 					pointer_clear_flag=1;
-					clear_display_flag=1;
+					//clear_display_flag=1;
 					resetButton();
 					break ;
 				
@@ -88,10 +51,12 @@ void menu_process(void){
 					
 				case BUTTON_MENUITEMBACK:
 					enter_upmenu();	
+					//clear_display_flag=1;
 					resetButton();
 					break ;
 				
 				case BUTTON_SELECT:
+					clear_display_flag=1;
 					execute_menu_action();											//запуск обработчика функции 
 					enter_submenu();												//в current_menu адрес дочернего пункта меню
 					resetButton();
@@ -114,13 +79,20 @@ void return_from_handler(void){
 
 void main_screen_handler(void){
 	menustate=0;
-	if(clear_display_flag){
+	update_bme280();
+	if(clear_display_flag){	
+		resetButton();											//отрисуем экран в память дисплея единожды
 		clear_display();
+		draw_border80x160(WHITE);
+		draw_image(0, 54,80, 24, mipt);
 		clear_display_flag=0;
 	}
-	update_bme280();
-	if(readButtonState()==BUTTON_MENUITEMBACK){								//в обработчике ожидаем нжатие кнопки возврата, если оно происходит, то
+	if(readButtonState()!=BUTTON_MENUITEMBACK){								//защита от иных нажатий, кроме кнопки выхода на главный экран
+		resetButton();
+	}else{																	//в обработчике ожидаем нжатие кнопки возврата, если оно происходит, то
 		return_from_handler();												//вызываем функцию возврата к меню
+		display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);                  //отрисовываем начальное меню
+		draw_pointer(current_menu);
 	}
 }
 
@@ -131,19 +103,21 @@ void backlight_handler(void){
 		clear_display_flag=0;
 	}
 	char buf[20]="";
-	sprintf(buf,"%u%%",pwm_value);
+	sprintf(buf,"%u %%",pwm_value);
 	switch(readButtonState()){
 		case BUTTON_MENUITEMBACK:
 			EEPROM_write_byte(BACKLIGHT_CELL,pwm_value);
 			return_from_handler();
 			break ;
 		case ENC_LEFT:
-			pwm_value--;
+			pwm_value-=5;
+			draw_string(50,20,buf,0,BACKGROUND_COLOR,BACKGROUND_COLOR,Grotesk16x32);
 			resetButton();
 			break ;
 				
 		case ENC_RIGHT:
-			pwm_value++;
+			pwm_value+=5;
+			draw_string(50,20,buf,0,BACKGROUND_COLOR,BACKGROUND_COLOR,Grotesk16x32);
 			resetButton();
 			break ;
 				
@@ -174,3 +148,45 @@ void about_handler(void){
 		return_from_handler();												//вызываем функцию возврата к меню
 	}
 }
+
+
+
+
+
+
+
+	/*pwm1A_start(pwm_value);
+	pwm_value>100?pwm_value=100:0;
+	draw_string(0,00,"backlight",0,BACKGROUND_COLOR,RED,TinyFont);
+	draw_number(100,00,pwm_value,0,BACKGROUND_COLOR,WHITE,TinyFont);
+	if(adc_conv_flag){
+		draw_string(0,40,"bme280_id",0,BACKGROUND_COLOR,RED,TinyFont);
+		draw_hexnumber(100,40,bme280_readbyte(BME280_ADDR, ID),0,BACKGROUND_COLOR,RED,TinyFont);
+		draw_string(0,20,"mpu6050",0,BACKGROUND_COLOR,RED,DotMatrix_M_Slash);
+		draw_hexnumber(100,20,whoami(),0,BACKGROUND_COLOR,RED,TinyFont);
+		ema_filter_array(ADC_data,255,ALFHA);
+		uint16_t dt=ADC_average(ADC_data);
+		float voltage=(dt*4.51)/1024;
+		draw_string(0,10,"voltage",0,BACKGROUND_COLOR,RED,TinyFont);
+		draw_float_number(100,10,voltage,"%0.1f",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
+		draw_string(132,10,"v",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
+		print_string("ADC_value ");
+		print_number(dt);
+		print_string("\r\n");
+		mpu6050_ready_data(&mpu6050_dt);
+		print_mpu6050_data();
+		adc_conv_flag=0;
+	}
+	update_bme280();
+	draw_string(0,30,"mpu_temp",0,BACKGROUND_COLOR,RED,TinyFont);
+	draw_float_number(100,30,mpu6050_temp(),"%.1f",0,BACKGROUND_COLOR,WHITE,TinyFont);
+	if(enc-prev_enc>0){
+		print_string("clockwise ");
+		print_number(enc);
+		print_string("\r\n");
+		} else if(enc-prev_enc<0){
+		print_string("counterclockwise ");
+		print_number(enc);
+		print_string("\r\n");
+	}
+	prev_enc=enc;*/

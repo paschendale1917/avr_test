@@ -1,4 +1,7 @@
-﻿#include <avr/io.h>
+﻿#ifndef ST7735_H_
+#define ST7735_H_
+
+#include <avr/io.h>
 #include <util/delay.h>
 #include "fonts.h"
 #include <avr/pgmspace.h>
@@ -7,9 +10,9 @@
 #include "macros.h"
 #include "spi.h"
 
-#ifndef ST7735_H_
-#define ST7735_H_
-
+//#define STN_PORTRAIT
+//#define STN_LANDSCAPE
+#define IPS_LANDSCAPE
 
 #define ST7735_RDDMADCTL												0xB0
 #define ST7735_NOP                                                      0x00
@@ -83,13 +86,25 @@
 #define GRAYBLUE    													0X5458
 #define ORANGE                                             				0xFA20
 
-#define LCD_HEIGHT_SIZE                                                 80    //высота
-#define LCD_WIDTH_SIZE                                                  160   //ширина
-#define MADCTL															0b01101000
-
-#define LCD_WIDTH_OFFSET												26
-#define LCD_HEIGHT_OFFSET												1
-
+#ifdef STN_PORTRAIT
+	#define LCD_HEIGHT_SIZE                                                 160    //высота
+	#define LCD_WIDTH_SIZE                                                  128		//ширина
+	#define MADCTL															0b11000000
+	#define LCD_WIDTH_OFFSET												0
+	#define LCD_HEIGHT_OFFSET												0
+#elif defined(STN_LANDSCAPE)
+	#define LCD_HEIGHT_SIZE                                                 128    //высота
+	#define LCD_WIDTH_SIZE                                                  160		//ширина
+	#define MADCTL															0b01100000
+	#define LCD_WIDTH_OFFSET												0
+	#define LCD_HEIGHT_OFFSET												0
+#elif defined(IPS_LANDSCAPE)
+	#define LCD_HEIGHT_SIZE                                                 80    //высота
+	#define LCD_WIDTH_SIZE                                                  160   //ширина
+	#define MADCTL															0b01101000
+	#define LCD_WIDTH_OFFSET												26
+	#define LCD_HEIGHT_OFFSET												1
+#endif
 
 #define BACKGROUND_COLOR                                                BLACK
 
@@ -98,11 +113,12 @@ void st7735_ports_init(void);
 void st7735_init(void);
 void draw_rect(uint16_t xstart, uint16_t ystart, uint16_t lenth, uint16_t height, uint16_t color);
 void background(uint16_t color);
+void draw_border80x160(uint16_t color);
 void draw_circle(uint8_t x, uint8_t y, uint8_t r, uint16_t color);
 void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bcolor, uint16_t fcolor, uint8_t *font);
 void draw_string(uint16_t xpos, uint16_t ypos, const char *string, int8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font);
 void draw_number(uint16_t xpos,  uint16_t ypos, int32_t number, int8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font);
-void draw_image(uint16_t x_start, uint16_t x_stop, uint16_t y_start, uint16_t y_stop, const uint16_t *image);
+void draw_image(uint16_t x_start, uint16_t x_stop, uint16_t y_start, uint16_t y_stop, const unsigned short *image);
 void draw_float_number(uint16_t xpos,  uint16_t ypos, float number,const char *dimens, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font);
 uint8_t draw_2num_zero(uint16_t xpos,  uint16_t ypos, uint8_t number, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font);
 void draw_hexnumber(uint16_t xpos,  uint16_t ypos, int32_t number, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font);

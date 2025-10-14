@@ -10,6 +10,7 @@
 #include "st7735.h"
 #include "encoder.h"
 #include "uart.h"
+#include "menu.h"
 
 
 
@@ -38,7 +39,7 @@ typedef struct {
 
 
 typedef struct {
-  uint32_t press;
+  uint16_t press;
   float hum;
   float temp;
 } record;

@@ -16,13 +16,15 @@ int main(void){
 	//print_string("HELLO WORLD\r\n");
 	//print_bme280_coef();
   	//i2c_scanner(scanned_addr);
+	//draw_border80x160(WHITE);
+	//draw_image(0, 54,80, 24, mipt);
 	menu_init(&main_menu_item_1);                                                       //инициализируем меню и устанавливаем указатель на первый пункт
-	display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);                                  //отрисовываем начальное меню
+	//display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);                                  //отрисовываем начальное меню*/
     while (1) {
 		
 		switch(menustate){
 			case 0:
-				//main_screen_handler();	
+				main_screen_handler();	
 				break;
 			case  1:
 			   // ADC_handler();

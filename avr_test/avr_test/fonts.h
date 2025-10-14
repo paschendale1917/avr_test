@@ -2,6 +2,7 @@
 #define fonts_H
 #include <avr/io.h>
 
+extern const unsigned short mipt[0x780];
 //extern const unsigned short q4[0x3200];
 //extern const unsigned short valve[0x3200];
 //extern const  unsigned short weact[12800];

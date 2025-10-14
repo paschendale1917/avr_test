@@ -52,6 +52,7 @@ C_SRCS +=  \
 ../i2c.c \
 ../main.c \
 ../menu.c \
+../mipt.c \
 ../mpu6050.c \
 ../PWM.c \
 ../spi.c \
@@ -82,6 +83,7 @@ handlers.o \
 i2c.o \
 main.o \
 menu.o \
+mipt.o \
 mpu6050.o \
 PWM.o \
 spi.o \
@@ -105,6 +107,7 @@ handlers.o \
 i2c.o \
 main.o \
 menu.o \
+mipt.o \
 mpu6050.o \
 PWM.o \
 spi.o \
@@ -128,6 +131,7 @@ handlers.d \
 i2c.d \
 main.d \
 menu.d \
+mipt.d \
 mpu6050.d \
 PWM.d \
 spi.d \
@@ -151,6 +155,7 @@ handlers.d \
 i2c.d \
 main.d \
 menu.d \
+mipt.d \
 mpu6050.d \
 PWM.d \
 spi.d \
@@ -271,6 +276,13 @@ LINKER_SCRIPT_DEP+=
 	
 
 ./menu.o: .././menu.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -O2 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./mipt.o: .././mipt.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -O2 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

@@ -23,7 +23,7 @@
 #define ENC_CLK            PD3
 #define ENC_BUTTON         PD4
 
-#define LONG_TIMEOUT       100
+#define LONG_TIMEOUT       150
 
 
 typedef  enum

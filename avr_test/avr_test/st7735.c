@@ -60,7 +60,13 @@ void st7735_init(void){
 	st7735_multiply_send(pwctr1_data, sizeof(pwctr1_data));
 	send_command(ST7735_VMCTR1);
 	send_data(0x0E);
+#ifdef STN_PORTRAIT
+	send_command(ST7735_INVOFF);
+#elif defined(STN_LANDSCAPE)
+	send_command(ST7735_INVOFF);
+#elif defined(IPS_LANDSCAPE)
 	send_command(ST7735_INVON);
+#endif
 	send_command(ST7735_MADCTL);
 	send_data(MADCTL); //0b01110000
 	send_command(ST7735_COLMOD);
@@ -93,17 +99,31 @@ void setXY(uint16_t xstart,  uint16_t xstop, uint16_t ystart,  uint16_t ystop){
 
 
 
-void draw_rect(uint16_t xstart, uint16_t ystart, uint16_t lenth, uint16_t height, uint16_t color){
+void draw_rect(uint16_t xstart, uint16_t ystart, uint16_t height, uint16_t lenth,  uint16_t color){
 	START_Tx;
-	setXY(xstart, lenth, ystart, height);
+	setXY(xstart, height, ystart, lenth);
 	send_command(ST7735_RAMWR);
-	ST7735_DATA;
 	for(uint32_t i = 0; i < lenth * height; i++) {
 		send_data((uint8_t)(color>>8));
 		send_data((uint8_t)color);
 	}
 
 	STOP_Tx;
+}
+
+void draw_hline(uint16_t xstart, uint16_t ystart, uint16_t lenth,  uint16_t color){
+	draw_rect( xstart, ystart, lenth,2,color);
+}
+
+void draw_vline(uint16_t xstart, uint16_t ystart, uint16_t height,  uint16_t color){
+	draw_rect( xstart, ystart, 2,height,color);
+}
+
+void draw_border80x160(uint16_t color){
+	draw_hline(0,0,160,color);
+	draw_hline(0,78,160,color);
+	draw_vline(0,0,80,color);
+	draw_vline(158,0,80,color);
 }
 
 void background(uint16_t color){
@@ -114,15 +134,14 @@ void clear_display(void){
 	background(BACKGROUND_COLOR);
 }
 
-void draw_image(uint16_t x_start, uint16_t x_stop, uint16_t y_start, uint16_t y_stop, const uint16_t *image){
-	uint16_t s=0;
+void draw_image(uint16_t x_start, uint16_t y_start, uint16_t height, uint16_t lenth,  const unsigned short *image){
 	START_Tx;
-	setXY(x_start,x_stop,y_start,y_stop);
+	setXY(x_start, height, y_start, lenth);
 	send_command(ST7735_RAMWR);
-	ST7735_DATA;
-	while(s++ < x_stop*y_stop){
-		spi_sendbyte((uint8_t)image[s]);
-		spi_sendbyte((uint8_t)(image[s]>>8));
+	for(uint32_t i = 0; i < lenth * height; i++) {
+		uint16_t color = pgm_read_word(&image[i]);
+		send_data(color >> 8);      // Старший байт (R/G)
+		send_data((uint8_t)color);    // Младший байт (B)
 	}
 	STOP_Tx;
 }
@@ -213,7 +232,7 @@ void draw_circle(uint8_t x, uint8_t y, uint8_t r, uint16_t color){
 void draw_number(uint16_t xpos,  uint16_t ypos, int32_t number, int8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font){
 	char buf[10] = {0};
 	uint8_t len = sprintf(buf, "%li", number);					//определяем длину числа
-	memset(buf + len, ' ', sizeof(buf) - len - 1);				// очищаем лишние позиции                                                                                   
+	//memset(buf + len, ' ', sizeof(buf) - len - 1);				// очищаем лишние позиции                                                                                   
 	draw_string(xpos,ypos,buf,space,bcolor,fcolor,font);
 }
 

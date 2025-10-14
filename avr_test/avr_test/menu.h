@@ -18,19 +18,31 @@
 #include "bme280.h"
 #include "handlers.h"
 
+#define TINYFONT
+
+#ifdef STN_PORTRAIT
+	#define BIGFONT_SPACE													-3
+	#define TINYFONT_SPACE													0
+	#define MENUFONT_SPACE													TINYFONT_SPACE
+	#define X_MENU_OFFSET													8               //меньше (font[1]+2) не делать! иначе не влезет в экран указатель пункта меню
+	#define Y_MENU_OFFSET													0
+	#define X_POINTER_OFFSET												(X_MENU_OFFSET-8)
+	#define Y_POINTER_OFFSET												Y_MENU_OFFSET
+	#define POINTER_TAB														2
+#elif defined(IPS_LANDSCAPE)
+	#define BIGFONT_SPACE													-3
+	#define TINYFONT_SPACE													0
+	#define MENUFONT_SPACE													TINYFONT_SPACE
+	#define X_MENU_OFFSET													20               //меньше (font[1]+2) не делать! иначе не влезет в экран указатель пункта меню
+	#define Y_MENU_OFFSET													0
+	#define X_POINTER_OFFSET												(X_MENU_OFFSET-10)
+	#define Y_POINTER_OFFSET												Y_MENU_OFFSET
+	#define POINTER_TAB														2
+#endif
 
 #define MENU_COLOR														GREEN
 #define POINTER_COLOR                                                   ORANGE
 #define MENU_FONT                                                       TinyFont
-#define BIGFONT_SPACE													-3
-#define TINYFONT_SPACE													0
-#define MENUFONT_SPACE													TINYFONT_SPACE
-#define X_MENU_OFFSET													20               //меньше (font[1]+2) не делать! иначе не влезет в экран указатель пункта меню
-#define Y_MENU_OFFSET													0
-#define X_POINTER_OFFSET												(X_MENU_OFFSET-10)
-#define Y_POINTER_OFFSET												Y_MENU_OFFSET
-
-#define TINYFONT
 
 #ifdef BIGFONT
 #define SYSTEM_FONT														BigFont

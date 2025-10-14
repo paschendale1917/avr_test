@@ -6,6 +6,7 @@ compensation comp_bme280={0,};
 datatype measure={0,};
 stack m_data={0};
 uint8_t is_stack_init=0;
+record bme280_data;
 
 volatile uint16_t global_ticks=0;
 volatile uint8_t flag_drawbme280=0;
@@ -249,15 +250,23 @@ void add_record(record *dt){
 
 //заводим любой таймер, настраиваем на нужную частоту прерываний и взводим флаг обновлени¤ данных в прерывании
 //конкретно здесь используетс¤ прерывание таймера 0 по каналу ј, которое обслуживает энкодер и кнопку
+//ПО НЕЯСНОЙ ПРИЧИНЕ sprintf ЛОМАЛ работу меню. может стек переполнялся?
 void update_bme280(void){
-	char string[20];
+	//char string[20];
 	if(update_bme280_flag){
-		sprintf(string,"temp        %0.1fC",(float)parse_temp_bme280(&comp_bme280)/100);
-		draw_string(0,50,string,0,BACKGROUND_COLOR,CYAN,TinyFont);
-		sprintf(string,"hum         %0.1f%%",(float)parse_hum_bme280(&comp_bme280)/1024);
-		draw_string(0,60,string,0,BACKGROUND_COLOR,RED,TinyFont);
-		sprintf(string,"press       %umm",(uint16_t)(parse_press_bme280(&comp_bme280)/256/133.3));
-		draw_string(0,70,string,0,BACKGROUND_COLOR,YELLOW,TinyFont);
+		add_record(&bme280_data);
+		//sprintf(string,"TEMPERATURE  %0.1fC",bme280_data.temp);
+		draw_string(4,4,"TEMPERATURE",0,BACKGROUND_COLOR,CYAN,SYSTEM_FONT);
+		draw_float_number(105,4, bme280_data.temp,"%0.1f",SYSTEMFONT_SPACE,BACKGROUND_COLOR,CYAN,SYSTEM_FONT);
+		draw_string(137,4,"C",0,BACKGROUND_COLOR,CYAN,SYSTEM_FONT);
+		//sprintf(string,"HUMIDITY     %0.1f%%",bme280_data.hum);
+		draw_string(4,14,"HUMIDITY",0,BACKGROUND_COLOR,RED,TinyFont); 
+		draw_float_number(105,14, bme280_data.hum,"%0.1f",SYSTEMFONT_SPACE,BACKGROUND_COLOR,RED,SYSTEM_FONT);
+		draw_string(137,14,"%",0,BACKGROUND_COLOR,RED,SYSTEM_FONT);
+		//sprintf(string,"PRESSURE     %umm",bme280_data.press);
+		draw_string(4,24,"PRESSURE",0,BACKGROUND_COLOR,YELLOW,TinyFont);  
+		draw_number(105,24, bme280_data.press,SYSTEMFONT_SPACE,BACKGROUND_COLOR,YELLOW,SYSTEM_FONT);
+		draw_string(130,24,"mm",0,BACKGROUND_COLOR,YELLOW,SYSTEM_FONT);
 		update_bme280_flag=0;
 	}
 }
