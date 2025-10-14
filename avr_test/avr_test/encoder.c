@@ -101,7 +101,7 @@ volatile uint8_t	update_bme280_flag=0;                                          
 	//SET_BIT(ADCSRA,1<<ADIF);
 	//ADCSRA |= (1 << ADSC);
 	!adc_conv?adc_conv_flag=1:0;
-	adc_conv==125?update_bme280_flag=1:update_bme280_flag;
+	!adc_conv?update_bme280_flag=1:update_bme280_flag;
  }
  
  uint8_t readButtonState(void){

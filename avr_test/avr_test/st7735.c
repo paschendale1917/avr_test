@@ -229,11 +229,53 @@ void draw_circle(uint8_t x, uint8_t y, uint8_t r, uint16_t color){
 	}
 }
 
+/*
 void draw_number(uint16_t xpos,  uint16_t ypos, int32_t number, int8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font){
 	char buf[10] = {0};
-	uint8_t len = sprintf(buf, "%li", number);					//определяем длину числа
+	/ *uint8_t len = * /sprintf(buf, "%li", number);					//определяем длину числа
 	//memset(buf + len, ' ', sizeof(buf) - len - 1);				// очищаем лишние позиции                                                                                   
 	draw_string(xpos,ypos,buf,space,bcolor,fcolor,font);
+}*/
+
+void draw_number(uint16_t xpos, uint16_t ypos, int32_t number, int8_t space, uint16_t bcolor, uint16_t fcolor, uint8_t *font) {
+	char buf[12];
+	uint8_t idx = 11;
+	buf[idx--] = '\0'; // Конец строки
+	
+	int32_t n = number;
+	uint8_t is_negative = 0;
+	
+	// Обработка отрицательных чисел
+	if (n < 0) {
+		is_negative = 1;
+		n = -n;
+	}
+	
+	// Преобразуем цифры с конца
+	do {
+		buf[idx--] = '0' + (n % 10);
+		n /= 10;
+	} while (n > 0 && idx > 0);
+	
+	// Добавляем знак минус если нужно
+	if (is_negative && idx > 0) {
+		buf[idx--] = '-';
+	}
+	
+	// Добавляем ведущие пробелы
+	if (space > 0) {
+		uint8_t current_len = 11 - idx - 1;
+		if (current_len < space) {
+			uint8_t spaces_needed = space - current_len;
+			while (spaces_needed > 0 && idx > 0) {
+				buf[idx--] = ' ';
+				spaces_needed--;
+			}
+		}
+	}
+	
+	// Передаем указатель на начало числа
+	draw_string(xpos, ypos, &buf[idx + 1], space, bcolor, fcolor, font);
 }
 
 void draw_hexnumber(uint16_t xpos,  uint16_t ypos, int32_t number, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font){
@@ -243,9 +285,50 @@ void draw_hexnumber(uint16_t xpos,  uint16_t ypos, int32_t number, uint8_t space
 }
 
 //draw_float_number(60,70,84.67,"%0.2f",0,BACKGROUND_COLOR,GREEN,TinyFont);
+/*
 void draw_float_number(uint16_t xpos,  uint16_t ypos, float number, const char *dimens, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font){
 	char buf[10] = {0};
 	sprintf(buf, dimens, number);
+	draw_string(xpos, ypos, buf, space, bcolor, fcolor, font);
+}*/
+
+void draw_float_number(uint16_t xpos, uint16_t ypos, float number, const char *dimens, uint8_t space, uint16_t bcolor, uint16_t fcolor, uint8_t *font) {
+	char buf[12] = {0};
+	uint8_t idx = 0;
+
+	// Обработка знака
+	if (number < 0) {
+		buf[idx++] = '-';
+		number = -number;
+	}
+	
+	// Целая и дробная части
+	int16_t integer_part = (int16_t)number;
+	int16_t fractional = (int16_t)((number - integer_part) * 100 + 0.5); // ×100 и округление
+	
+	// Целая часть
+	if (integer_part == 0) {
+		buf[idx++] = '0';
+		} else {
+		uint8_t digits[5];
+		uint8_t digit_count = 0;
+		int16_t temp = integer_part;
+		
+		while (temp > 0 && digit_count < 5) {
+			digits[digit_count++] = temp % 10;
+			temp /= 10;
+		}
+		
+		for (int8_t i = digit_count - 1; i >= 0; i--) {
+			buf[idx++] = '0' + digits[i];
+		}
+	}
+	
+	// Дробная часть
+	buf[idx++] = '.';
+	buf[idx++] = '0' + (fractional / 10) % 10;
+	
+	buf[idx] = '\0';
 	draw_string(xpos, ypos, buf, space, bcolor, fcolor, font);
 }
 

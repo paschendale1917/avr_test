@@ -79,7 +79,7 @@ void return_from_handler(void){
 
 void main_screen_handler(void){
 	menustate=0;
-	update_bme280();
+	//update_bme280();
 	if(clear_display_flag){	
 		resetButton();											//отрисуем экран в память дисплея единожды
 		clear_display();
