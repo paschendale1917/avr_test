@@ -264,7 +264,7 @@ void draw_number(uint16_t xpos, uint16_t ypos, int32_t number, int8_t space, uin
 	
 	// Добавляем ведущие пробелы
 	if (space > 0) {
-		uint8_t current_len = 11 - idx - 1;
+		uint8_t current_len = 11 - idx; // ИСПРАВЛЕНО: было 11 - idx - 1
 		if (current_len < space) {
 			uint8_t spaces_needed = space - current_len;
 			while (spaces_needed > 0 && idx > 0) {

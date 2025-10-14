@@ -250,7 +250,7 @@ void add_record(record *dt){
 
 //заводим любой таймер, настраиваем на нужную частоту прерываний и взводим флаг обновлени¤ данных в прерывании
 //конкретно здесь используетс¤ прерывание таймера0 по каналу 1, которое обслуживает энкодер и кнопку
-//ПО НЕЯСНОЙ ПРИЧИНЕ sprintf ЛОМАЛ работу меню. может стек переполнялся?
+//ПО НЕЯСНОЙ ПРИЧИНЕ sprintf ЛОМАЕТ работу меню. может стек переполняется?
 //UPD глюки продолжаются и без sprintf
 //все проходит, как только убираю эту функцию из работы
 void update_bme280(void){
@@ -258,17 +258,17 @@ void update_bme280(void){
 	if(update_bme280_flag){
 		add_record(&bme280_data);
 		//sprintf(string,"TEMPERATURE  %0.1fC",bme280_data.temp);
-		draw_string(4,4,"TEMPERATURE",0,BACKGROUND_COLOR,CYAN,SYSTEM_FONT);
+		draw_string(4,4,"TEMPERATURE",0,BACKGROUND_COLOR,CYAN,MENU_FONT);
 		draw_float_number(105,4, bme280_data.temp,"%0.1f",SYSTEMFONT_SPACE,BACKGROUND_COLOR,CYAN,SYSTEM_FONT);
 		draw_string(137,4,"C",0,BACKGROUND_COLOR,CYAN,SYSTEM_FONT);
 		//sprintf(string,"HUMIDITY     %0.1f%%",bme280_data.hum);
-		draw_string(4,14,"HUMIDITY",0,BACKGROUND_COLOR,RED,TinyFont); 
+		draw_string(4,14,"HUMIDITY",0,BACKGROUND_COLOR,RED,MENU_FONT); 
 		draw_float_number(105,14, bme280_data.hum,"%0.1f",SYSTEMFONT_SPACE,BACKGROUND_COLOR,RED,SYSTEM_FONT);
 		draw_string(137,14,"%",0,BACKGROUND_COLOR,RED,SYSTEM_FONT);
 		//sprintf(string,"PRESSURE     %umm",bme280_data.press);
-		draw_string(4,24,"PRESSURE",0,BACKGROUND_COLOR,YELLOW,TinyFont);  
-		draw_number(105,24, bme280_data.press,SYSTEMFONT_SPACE,BACKGROUND_COLOR,YELLOW,SYSTEM_FONT);
-		draw_string(130,24,"mm",0,BACKGROUND_COLOR,YELLOW,SYSTEM_FONT);
+		draw_string(4,24,"PRESSURE",0,BACKGROUND_COLOR,YELLOW,MENU_FONT);  
+		draw_number(105,24, bme280_data.press,SYSTEMFONT_SPACE,BACKGROUND_COLOR,YELLOW,MENU_FONT);
+		draw_string(130,24,"mm",0,BACKGROUND_COLOR,YELLOW,MENU_FONT);
 		update_bme280_flag=0;
 	}
 }

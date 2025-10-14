@@ -23,48 +23,45 @@ void hardware_init(void){
 
 void menu_process(void){
 	switch(readButtonState()){
-				case ENC_LEFT:
-					//pwm_value--;
-					//enc--;
-					menu_navigate_prev(); //если поворот влево, то в указатель пункта меню пишем адрес структуры, описывающей предыдущий пункт меню
-					pointer_clear_flag=1; //флаг используется для того, чтобы указатель перерисовывался не постоянно, тратя ресурсы мк, а только тогда, когда происходит поворот ручки энкодера
-					clear_display_flag=1;
-					resetButton();
-					break ;
+		case ENC_LEFT:
+			//pwm_value--;
+			//enc--;
+			menu_navigate_prev(); //если поворот влево, то в указатель пункта меню пишем адрес структуры, описывающей предыдущий пункт меню
+			pointer_clear_flag=1; //флаг используется для того, чтобы указатель перерисовывался не постоянно, тратя ресурсы мк, а только тогда, когда происходит поворот ручки энкодера
+			clear_display_flag=1;
+			resetButton();
+			break ;
 				
-				case ENC_RIGHT:
-					//pwm_value++;
-					//enc++;
-					menu_navigate_next();
-					pointer_clear_flag=1;
-					//clear_display_flag=1;
-					resetButton();
-					break ;
+		case ENC_RIGHT:
+			//pwm_value++;
+			//enc++;
+			menu_navigate_next();
+			pointer_clear_flag=1;
+			//clear_display_flag=1;
+			resetButton();
+			break ;
 				
-				case BUTTON_UP:
-					resetButton();
-					break ;
-				
-				case BUTTON_DOWN:
-					resetButton();
-					break ;
+		case BUTTON_UP:
+		case BUTTON_DOWN:
+			resetButton();
+			break ;
 					
-				case BUTTON_MENUITEMBACK:
-					enter_upmenu();	
-					//clear_display_flag=1;
-					resetButton();
-					break ;
+		case BUTTON_MENUITEMBACK:
+			enter_upmenu();	
+			//clear_display_flag=1;
+			resetButton();
+			break ;
 				
-				case BUTTON_SELECT:
-					clear_display_flag=1;
-					execute_menu_action();											//запуск обработчика функции 
-					enter_submenu();												//в current_menu адрес дочернего пункта меню
-					resetButton();
-					break ;
+		case BUTTON_SELECT:
+			clear_display_flag=1;
+			execute_menu_action();											//запуск обработчика функции 
+			enter_submenu();												//в current_menu адрес дочернего пункта меню
+			resetButton();
+			break ;
 				
-				default:
-					display_pointer(pointer);
-					break ;
+		default:
+			display_pointer(pointer);                                      //постоянно отслеживаем необходимость отрисовывать указатель, так как он у нас подвижный элемент
+			break ;														   //меню обновляется только при переходе с одного уровня на другой
 	}
 }
 
@@ -79,20 +76,29 @@ void return_from_handler(void){
 
 void main_screen_handler(void){
 	menustate=0;
-	//update_bme280();
-	if(clear_display_flag){	
-		resetButton();											//отрисуем экран в память дисплея единожды
-		clear_display();
-		draw_border80x160(WHITE);
-		draw_image(0, 54,80, 24, mipt);
-		clear_display_flag=0;
-	}
-	if(readButtonState()!=BUTTON_MENUITEMBACK){								//защита от иных нажатий, кроме кнопки выхода на главный экран
-		resetButton();
-	}else{																	//в обработчике ожидаем нжатие кнопки возврата, если оно происходит, то
-		return_from_handler();												//вызываем функцию возврата к меню
-		display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);                  //отрисовываем начальное меню
-		draw_pointer(current_menu);
+	switch(readButtonState()){
+		case ENC_LEFT:
+		case ENC_RIGHT:
+		case BUTTON_UP:
+		case BUTTON_DOWN:
+		case BUTTON_SELECT:
+			resetButton();
+			break;
+		case BUTTON_MENUITEMBACK:																//в обработчике ожидаем нжатие кнопки возврата, если оно происходит, то
+			return_from_handler();												//вызываем функцию возврата к меню
+			display_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);                  //отрисовываем начальное меню
+			draw_pointer(current_menu);
+			break;
+		default:
+			//update_bme280();
+			if(clear_display_flag){
+				resetButton();											//отрисуем экран в память дисплея единожды
+				clear_display();
+				draw_border80x160(WHITE);
+				draw_image(0, 54,80, 24, mipt);
+				clear_display_flag=0;
+			}
+			break;
 	}
 }
 
@@ -136,7 +142,6 @@ void ADC_handler(void){
 }
 
 
-
 void about_handler(void){
 	menustate=3;
 	if(clear_display_flag){													//очистить нужно единожды, поэтому был введен флаг очистки дисплея                           
@@ -153,7 +158,7 @@ void about_handler(void){
 
 
 
-
+//МУСОРКА
 
 	/*pwm1A_start(pwm_value);
 	pwm_value>100?pwm_value=100:0;
