@@ -3,12 +3,14 @@
 uint8_t menustate =0;
 uint8_t clear_display_flag=1;
 
-	const char  PROGMEM temp[]="TEMPERATURE";
-	const char  PROGMEM deg[]="C";
-	const char  PROGMEM press[]="PRESSURE";
-	const char  PROGMEM mm[]="mm";
-	const char  PROGMEM hum[]="HUMIDITY";
-	const char  PROGMEM pc[]="%";
+const char  PROGMEM temp[]="TEMPERATURE";
+const char  PROGMEM deg[]="C";
+const char  PROGMEM press[]="PRESSURE";
+const char  PROGMEM mm[]="mm";
+const char  PROGMEM hum[]="HUMIDITY";
+const char  PROGMEM pc[]="%";
+const char  PROGMEM bryansk[]="BRYANSK 2025";
+const char  PROGMEM bkl[]="BACKLIGHT";
 
 void hardware_init(void){
 	enc_ports_init();
@@ -150,7 +152,7 @@ void backlight_handler(void){
 		default:
 			pwm1A_start(pwm_value);	
 			pwm_value>100?pwm_value=100:0;
-			draw_string(15,0,"BACKLIGHT",-3,BACKGROUND_COLOR,RED,BigFont);
+			draw_string_progmem(15,0,bkl,-3,BACKGROUND_COLOR,RED,BigFont);
 			draw_string(50,20,buf,-2,BACKGROUND_COLOR,RED,BigFont);
 			break ;
 		}
@@ -168,7 +170,7 @@ void about_handler(void){
 		clear_current_menu(X_MENU_OFFSET,Y_MENU_OFFSET);
 		clear_display_flag=0;
 	}
-	draw_string(0,0,"Bryansk 2025",0,BACKGROUND_COLOR,MAGENTA,TinyFont);
+	draw_string(0,0,bryansk,0,BACKGROUND_COLOR,MAGENTA,TinyFont);
 	if(readButtonState()==BUTTON_MENUITEMBACK){								//в обработчике ожидаем нжатие кнопки возврата, если оно происходит, то
 		return_from_handler();												//вызываем функцию возврата к меню
 	}

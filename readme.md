@@ -52,6 +52,5 @@ git clone https://github.com/paschendale1917/avr_test.git
 
 ###	TO DO:
 - Оптимизация меню(перенос в память программ всех строк)
-- оптимизация меню
 - MPU6050 
 
