@@ -142,13 +142,13 @@ void backlight_handler(void){
 			break ;
 		case ENC_LEFT:
 			pwm_value-=5;
-			draw_string(50,20,buf,-2,BACKGROUND_COLOR,BACKGROUND_COLOR,BigFont); //приходится перерисовывать строку при каждом повороте вала энкодера, чтобы не оставалось фантомов при уменьшении кол-ва разрядов числа
+			draw_string(50,20+Y_MENU_OFFSET,buf,-2,BACKGROUND_COLOR,BACKGROUND_COLOR,BigFont); //приходится перерисовывать строку при каждом повороте вала энкодера, чтобы не оставалось фантомов при уменьшении кол-ва разрядов числа
 			resetButton();
 			break ;
 				
 		case ENC_RIGHT:
 			pwm_value+=5;
-			draw_string(50,20,buf,-2,BACKGROUND_COLOR,BACKGROUND_COLOR,BigFont);
+			draw_string(50,20+Y_MENU_OFFSET,buf,-2,BACKGROUND_COLOR,BACKGROUND_COLOR,BigFont);
 			resetButton();
 			break ;
 				
