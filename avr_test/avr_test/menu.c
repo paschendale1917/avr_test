@@ -106,6 +106,7 @@ void display_pointer(const char *pointer) {
 //функция отображения всех пунктов текущего меню
 void display_current_menu(uint8_t xstart, uint8_t ystart) {
 	uint8_t space=pgm_read_byte(MENU_FONT+1)+2;
+	draw_border(WHITE);
 	clear_pointer(current_menu);
 	for(uint8_t i=0;i<current_menu->num_menu_items;i++){
 		draw_string_progmem(xstart,ystart+space*i,*(current_menu->menu_name+i), MENUFONT_SPACE, BACKGROUND_COLOR, MENU_COLOR,MENU_FONT);

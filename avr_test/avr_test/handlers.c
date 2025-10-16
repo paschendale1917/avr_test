@@ -83,6 +83,17 @@ void return_from_handler(void){
 	resetButton();														//обязательно сбросить флаг нажатой кнопки, иначе он будет висеть и кнопка окажется недееспособной
 }
 
+void draw_bme280_data(void){
+	draw_string_progmem(4,24,press,0,BACKGROUND_COLOR,YELLOW,MENU_FONT);
+	draw_number(105,24, bme280_data.press,SYSTEMFONT_SPACE,BACKGROUND_COLOR,YELLOW,MENU_FONT);
+	draw_string_progmem(130,24,mm,0,BACKGROUND_COLOR,YELLOW,MENU_FONT);
+	draw_string_progmem(4,4,temp,0,BACKGROUND_COLOR,CYAN,MENU_FONT);
+	draw_float_number(105,4, bme280_data.temp,SYSTEMFONT_SPACE,BACKGROUND_COLOR,CYAN,MENU_FONT);
+	draw_string_progmem(137,4,deg,0,BACKGROUND_COLOR,CYAN,MENU_FONT);
+	draw_string_progmem(4,14,hum,0,BACKGROUND_COLOR,RED,MENU_FONT);
+	draw_float_number(105,14, bme280_data.hum,SYSTEMFONT_SPACE,BACKGROUND_COLOR,RED,MENU_FONT);
+	draw_string_progmem(137,14,pc,0,BACKGROUND_COLOR,RED,MENU_FONT);
+}
 void main_screen_handler(void){
 	menustate=0;
 
@@ -101,19 +112,11 @@ void main_screen_handler(void){
 			break;
 		default:
 			update_bme280();
-			draw_string_progmem(4,24,press,0,BACKGROUND_COLOR,YELLOW,MENU_FONT);
-			draw_number(105,24, bme280_data.press,SYSTEMFONT_SPACE,BACKGROUND_COLOR,YELLOW,MENU_FONT);
-			draw_string_progmem(130,24,mm,0,BACKGROUND_COLOR,YELLOW,MENU_FONT);
-			draw_string_progmem(4,4,temp,0,BACKGROUND_COLOR,CYAN,MENU_FONT);
-			draw_float_number(105,4, bme280_data.temp,SYSTEMFONT_SPACE,BACKGROUND_COLOR,CYAN,MENU_FONT);
-			draw_string_progmem(137,4,deg,0,BACKGROUND_COLOR,CYAN,MENU_FONT);
-			draw_string_progmem(4,14,hum,0,BACKGROUND_COLOR,RED,MENU_FONT);
-			draw_float_number(105,14, bme280_data.hum,SYSTEMFONT_SPACE,BACKGROUND_COLOR,RED,MENU_FONT);
-			draw_string_progmem(137,14,pc,0,BACKGROUND_COLOR,RED,MENU_FONT);
+			draw_bme280_data();
 			if(clear_display_flag){
 				resetButton();											//отрисуем экран в память дисплея единожды
 				clear_display();
-				draw_border80x160(WHITE);
+				draw_border(WHITE);
 				draw_image(0, 54,80, 24, mipt);
 				clear_display_flag=0;
 			}
@@ -152,8 +155,8 @@ void backlight_handler(void){
 		default:
 			pwm1A_start(pwm_value);	
 			pwm_value>100?pwm_value=100:0;
-			draw_string_progmem(15,0,bkl,-3,BACKGROUND_COLOR,RED,BigFont);
-			draw_string(50,20,buf,-2,BACKGROUND_COLOR,RED,BigFont);
+			draw_string_progmem(15,Y_MENU_OFFSET,bkl,-3,BACKGROUND_COLOR,RED,BigFont);
+			draw_string(50,20+Y_MENU_OFFSET,buf,-2,BACKGROUND_COLOR,RED,BigFont);
 			break ;
 		}
 	

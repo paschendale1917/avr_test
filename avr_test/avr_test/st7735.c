@@ -119,11 +119,11 @@ void draw_vline(uint16_t xstart, uint16_t ystart, uint16_t height,  uint16_t col
 	draw_rect( xstart, ystart, 2,height,color);
 }
 
-void draw_border80x160(uint16_t color){
-	draw_hline(0,0,160,color);
-	draw_hline(0,78,160,color);
-	draw_vline(0,0,80,color);
-	draw_vline(158,0,80,color);
+void draw_border(uint16_t color){
+	draw_hline(0,0,LCD_WIDTH_SIZE,color);
+	draw_hline(0,LCD_HEIGHT_SIZE-2,LCD_WIDTH_SIZE,color);
+	draw_vline(0,0,LCD_HEIGHT_SIZE ,color);
+	draw_vline(LCD_WIDTH_SIZE-2,0,LCD_HEIGHT_SIZE,color);
 }
 
 void background(uint16_t color){
@@ -196,7 +196,7 @@ void draw_string(uint16_t xpos, uint16_t ypos, const char *string, int8_t space,
 	}
 }
 
-void draw_string_progmem(uint16_t xpos, uint16_t ypos, const char *string, int8_t space, uint16_t bcolor, uint16_t fcolor, const uint8_t *font) {
+void draw_string_progmem(uint16_t xpos, uint16_t ypos, const char *string, int8_t space, uint16_t bcolor, uint16_t fcolor,  uint8_t *font) {
     char current_char;
     while((current_char = pgm_read_byte(string)) != 0) {
         draw_char(xpos, ypos,current_char, bcolor, fcolor, font);
@@ -340,6 +340,13 @@ void draw_float_number(uint16_t xpos, uint16_t ypos, float number,  uint8_t spac
 	buf[idx] = '\0';
 	draw_string(xpos, ypos, buf, space, bcolor, fcolor, font);
 }
+
+
+
+
+
+
+
 
 /*потом поковырять*/
 uint8_t draw_2num_zero(uint16_t xpos,  uint16_t ypos, uint8_t number, uint8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font){
