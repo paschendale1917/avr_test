@@ -61,6 +61,7 @@ extern datatype measure;
 extern compensation comp_bme280;
 extern uint8_t raw_data[];
 extern volatile uint16_t global_ticks;
+extern record bme280_data;
 
 
 extern volatile uint8_t flag_drawbme280;
@@ -173,6 +174,10 @@ uint8_t get_compens(compensation *dt);
 int32_t parse_temp_bme280(compensation *dc);
 uint32_t parse_hum_bme280(compensation *dc);
 uint32_t parse_press_bme280(compensation *dc);
+void add_record(record *dt);
 void update_bme280(void);
+void update_temp(void);
+void update_hum(void);
+void update_press(void);
 
 #endif

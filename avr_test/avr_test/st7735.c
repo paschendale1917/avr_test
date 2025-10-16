@@ -188,6 +188,7 @@ void draw_char(uint16_t xstart, uint16_t ystart, const char letter, uint16_t bco
 	STOP_Tx;
 }
 
+
 void draw_string(uint16_t xpos, uint16_t ypos, const char *string, int8_t space, uint16_t bcolor,  uint16_t fcolor, uint8_t *font){
 	while(*string != 0) {
 		draw_char(xpos, ypos, *string++, bcolor, fcolor, font);
@@ -195,6 +196,14 @@ void draw_string(uint16_t xpos, uint16_t ypos, const char *string, int8_t space,
 	}
 }
 
+void draw_string_progmem(uint16_t xpos, uint16_t ypos, const char *string, int8_t space, uint16_t bcolor, uint16_t fcolor, const uint8_t *font) {
+    char current_char;
+    while((current_char = pgm_read_byte(string)) != 0) {
+        draw_char(xpos, ypos,current_char, bcolor, fcolor, font);
+        xpos += (uint16_t)(pgm_read_byte(font) + space);
+        string++;
+    }
+}
 void draw_dot(uint16_t x, uint16_t y, uint16_t color)
 {
 	START_Tx;
@@ -292,7 +301,7 @@ void draw_float_number(uint16_t xpos,  uint16_t ypos, float number, const char *
 	draw_string(xpos, ypos, buf, space, bcolor, fcolor, font);
 }*/
 
-void draw_float_number(uint16_t xpos, uint16_t ypos, float number, const char *dimens, uint8_t space, uint16_t bcolor, uint16_t fcolor, uint8_t *font) {
+void draw_float_number(uint16_t xpos, uint16_t ypos, float number,  uint8_t space, uint16_t bcolor, uint16_t fcolor, uint8_t *font) {
 	char buf[12] = {0};
 	uint8_t idx = 0;
 

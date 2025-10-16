@@ -3,6 +3,13 @@
 uint8_t menustate =0;
 uint8_t clear_display_flag=1;
 
+	const char  PROGMEM temp[]="TEMPERATURE";
+	const char  PROGMEM deg[]="C";
+	const char  PROGMEM press[]="PRESSURE";
+	const char  PROGMEM mm[]="mm";
+	const char  PROGMEM hum[]="HUMIDITY";
+	const char  PROGMEM pc[]="%";
+
 void hardware_init(void){
 	enc_ports_init();
 	timer0_init();                //таймер обслуживает средства ввода и используется для выставления флага обновления данных с bme280
@@ -76,6 +83,7 @@ void return_from_handler(void){
 
 void main_screen_handler(void){
 	menustate=0;
+
 	switch(readButtonState()){
 		case ENC_LEFT:
 		case ENC_RIGHT:
@@ -90,7 +98,16 @@ void main_screen_handler(void){
 			draw_pointer(current_menu);
 			break;
 		default:
-			//update_bme280();
+			update_bme280();
+			draw_string_progmem(4,24,press,0,BACKGROUND_COLOR,YELLOW,MENU_FONT);
+			draw_number(105,24, bme280_data.press,SYSTEMFONT_SPACE,BACKGROUND_COLOR,YELLOW,MENU_FONT);
+			draw_string_progmem(130,24,mm,0,BACKGROUND_COLOR,YELLOW,MENU_FONT);
+			draw_string_progmem(4,4,temp,0,BACKGROUND_COLOR,CYAN,MENU_FONT);
+			draw_float_number(105,4, bme280_data.temp,SYSTEMFONT_SPACE,BACKGROUND_COLOR,CYAN,MENU_FONT);
+			draw_string_progmem(137,4,deg,0,BACKGROUND_COLOR,CYAN,MENU_FONT);
+			draw_string_progmem(4,14,hum,0,BACKGROUND_COLOR,RED,MENU_FONT);
+			draw_float_number(105,14, bme280_data.hum,SYSTEMFONT_SPACE,BACKGROUND_COLOR,RED,MENU_FONT);
+			draw_string_progmem(137,14,pc,0,BACKGROUND_COLOR,RED,MENU_FONT);
 			if(clear_display_flag){
 				resetButton();											//отрисуем экран в память дисплея единожды
 				clear_display();
@@ -109,21 +126,24 @@ void backlight_handler(void){
 		clear_display_flag=0;
 	}
 	char buf[20]="";
-	sprintf(buf,"%u %%",pwm_value);
+	sprintf(buf,"%u%%",pwm_value);
 	switch(readButtonState()){
+		case BUTTON_SELECT:
+		resetButton();
+		break ;
 		case BUTTON_MENUITEMBACK:
 			EEPROM_write_byte(BACKLIGHT_CELL,pwm_value);
 			return_from_handler();
 			break ;
 		case ENC_LEFT:
 			pwm_value-=5;
-			draw_string(50,20,buf,0,BACKGROUND_COLOR,BACKGROUND_COLOR,Grotesk16x32);
+			draw_string(50,20,buf,-2,BACKGROUND_COLOR,BACKGROUND_COLOR,BigFont); //приходится перерисовывать строку при каждом повороте вала энкодера, чтобы не оставалось фантомов при уменьшении кол-ва разрядов числа
 			resetButton();
 			break ;
 				
 		case ENC_RIGHT:
 			pwm_value+=5;
-			draw_string(50,20,buf,0,BACKGROUND_COLOR,BACKGROUND_COLOR,Grotesk16x32);
+			draw_string(50,20,buf,-2,BACKGROUND_COLOR,BACKGROUND_COLOR,BigFont);
 			resetButton();
 			break ;
 				
@@ -131,7 +151,7 @@ void backlight_handler(void){
 			pwm1A_start(pwm_value);	
 			pwm_value>100?pwm_value=100:0;
 			draw_string(15,0,"BACKLIGHT",-3,BACKGROUND_COLOR,RED,BigFont);
-			draw_string(50,20,buf,0,BACKGROUND_COLOR,RED,Grotesk16x32);
+			draw_string(50,20,buf,-2,BACKGROUND_COLOR,RED,BigFont);
 			break ;
 		}
 	

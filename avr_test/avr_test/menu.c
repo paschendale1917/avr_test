@@ -6,10 +6,35 @@ uint8_t enc=0,prev_enc=0;
 
 uint8_t pointer_clear_flag=0;
 
+const char PROGMEM sys_set[]="SYSTEM_SETTINGS";
+const char PROGMEM menu_it2[]="MENU_ITEM_2";
+const char PROGMEM menu_it3[]="MENU_ITEM_3";
+const char PROGMEM about[]="ABOUT";
+
+const char PROGMEM adc_set[]="ADC_SETTINGS";
+const char PROGMEM backlght[]="BACKLIGHT";
+const char PROGMEM menu_it1_3[]="MENU_ITEM_1.3";
+
+const char PROGMEM menu_it2_1[]="MENU_ITEM_2.1";
+const char PROGMEM menu_it2_2[]="MENU_ITEM_2.2";
+
+const char PROGMEM menu_it3_1[]="MENU_ITEM_3.1";
+const char PROGMEM menu_it3_2[]="MENU_ITEM_3.2";
+const char PROGMEM menu_it3_3[]="MENU_ITEM_3.3";
+const char PROGMEM menu_it3_4[]="MENU_ITEM_3.4";
+const char PROGMEM menu_it3_5[]="MENU_ITEM_3.5";
+
+
+const char *main_menu[]={sys_set,menu_it2,menu_it3,about};
+const char *item_1_menu[]={adc_set,backlght,menu_it1_3};
+const char *item_2_menu[]={menu_it2_1,menu_it2_2};
+const char *item_3_menu[]={menu_it3_1,menu_it3_2,menu_it3_3,menu_it3_4,menu_it3_5};
+
+/*
 const char *main_menu[]={"SYSTEM_SETTINGS","MENU_ITEM_2","MENU_ITEM_3","ABOUT"};
 const char *item_1_menu[]={"ADC_SETTINGS","BACKLIGHT","MENU_ITEM_1.3"};
 const char *item_2_menu[]={"MENU_ITEM_2.1","MENU_ITEM_2.2"};
-const char *item_3_menu[]={"MENU_ITEM_3.1","MENU_ITEM_3.2","MENU_ITEM_3.3","MENU_ITEM_3.4","MENU_ITEM_3.5"};
+const char *item_3_menu[]={"MENU_ITEM_3.1","MENU_ITEM_3.2","MENU_ITEM_3.3","MENU_ITEM_3.4","MENU_ITEM_3.5"};*/
 const char *pointer=">";
 
 //указатель на структуру, описывающую текущий пункт меню
@@ -83,7 +108,7 @@ void display_current_menu(uint8_t xstart, uint8_t ystart) {
 	uint8_t space=pgm_read_byte(MENU_FONT+1)+2;
 	clear_pointer(current_menu);
 	for(uint8_t i=0;i<current_menu->num_menu_items;i++){
-		draw_string(xstart,ystart+space*i,*(current_menu->menu_name+i), MENUFONT_SPACE, BACKGROUND_COLOR, MENU_COLOR,MENU_FONT);
+		draw_string_progmem(xstart,ystart+space*i,*(current_menu->menu_name+i), MENUFONT_SPACE, BACKGROUND_COLOR, MENU_COLOR,MENU_FONT);
 	}
 }
 
@@ -91,7 +116,7 @@ void display_current_menu(uint8_t xstart, uint8_t ystart) {
 void clear_current_menu(uint8_t xstart, uint8_t ystart) { 
 	uint8_t space=pgm_read_byte(MENU_FONT+1)+2;
 	for(uint8_t i=0;i<current_menu->num_menu_items;i++){
-		draw_string(xstart,ystart+space*i,*(current_menu->menu_name+i), MENUFONT_SPACE, BACKGROUND_COLOR, BACKGROUND_COLOR,MENU_FONT);
+		draw_string_progmem(xstart,ystart+space*i,*(current_menu->menu_name+i), MENUFONT_SPACE, BACKGROUND_COLOR, BACKGROUND_COLOR,MENU_FONT);
 	}
 	clear_pointer(current_menu);	
 }
